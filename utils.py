@@ -60,11 +60,12 @@ def get_data_lines(problem_number):
     # Return a tuple of (sample data, full data)
     # Based on the problem number. Normal
     # pattern is to have line-specific parsers that operate on the return from this.
-    sample_file = f'./data/{problem_number}s.txt'
-    data_file = f'./data/{problem_number}.txt'
+    zero_padded = f"{problem_number:02}"
+    sample_file = f'./data/{zero_padded}s.txt'
+    data_file = f'./data/{zero_padded}.txt'
 
-    sample_data = clean_lines(open(f'./data/{problem_number}s.txt', 'r').readlines())
-    full_data = clean_lines(open(f'./data/{problem_number}.txt', 'r').readlines())
+    sample_data = clean_lines(open(f'./data/{zero_padded}s.txt', 'r').readlines())
+    full_data = clean_lines(open(f'./data/{zero_padded}.txt', 'r').readlines())
     return (sample_data, full_data)
 
 
