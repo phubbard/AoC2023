@@ -9,18 +9,25 @@ logging.basicConfig(level=logging.DEBUG, format='%(pathname)s(%(lineno)s): %(lev
 log = logging.getLogger()
 
 
-def parse_words_to_numbers(data: list) -> list:
-    # given a list of strings with overlapping number words, parse into ordered list of numbers
-    # EG eightwothree -> [8, 2, 3]
-    search_strings = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
-    reversed_search_strings = search_strings[::-1]
-    best_match = -1
-    for word in search_strings:
-        loc = word.find(data)
+# Try the stabbylambda approach
+def expand_strings(line: str) -> str:
+    remap = [
+        {'one': 'one1one'}, {'two': 'two2two'},
+        {'three': 'three3three'},
+        {'four': 'four4four'},
+        {'five': 'five5five'}, {'six': 'six6six'},
+        {'seven': 'seven7seven'},
+        {'eight': 'eight8eight'},
+        {'nine': 'nine9nine'}, {'zero': 'zero0zero'}
+    ]
 
+    for idx in range(len(remap)):
+        src = list(remap[idx].keys())[0]
+        dest = list(remap[idx].values())[0]
+        line = line.replace(src, dest)
+    return line
 
-
-
+    
 def process_data(data: list) -> int:
     numbers = []
     for line in data:
@@ -44,6 +51,10 @@ if __name__ == '__main__':
     log.info(f"Sample: {process_data(sample_data)=}")
     log.info(f"Full: {process_data(full_data)=}")
 
-
+    p2s = get_data_as_lines(1, 's2')
+    rc = []
+    for line in p2s:
+        rc.append(expand_strings(line))
+    log.info(f"Part two sample {process_data(rc)=}")
     # log.info(f"Part two: {process_data(p2_data)=}")
 
