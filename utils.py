@@ -1,5 +1,9 @@
 
 from itertools import permutations, combinations_with_replacement
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(pathname)s(%(lineno)s): %(levelname)s %(message)s')
+log = logging.getLogger()
 
 
 def find_permutations(input_chars, length=8):
