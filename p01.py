@@ -7,6 +7,21 @@ from utils import get_data_lines
 logging.basicConfig(level=logging.DEBUG, format='%(pathname)s(%(lineno)s): %(levelname)s %(message)s')
 log = logging.getLogger()
 
+part_two = """
+two1nine
+eightwothree
+abcone2threexyz
+xtwone3four
+4nineeightseven2
+zoneight234
+7pqrstsixteen
+"""
+
+def parse_words_to_numbers(data: list) -> list:
+    # given a list of strings with overlapping number words, parse into ordered list of numbers
+    # EG eightwothree -> [8, 2, 3]
+
+
 
 def process_data(data: list) -> int:
     numbers = []
