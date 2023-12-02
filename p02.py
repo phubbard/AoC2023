@@ -25,6 +25,11 @@ def game_max(game: str) -> dict:
     return maxes
 
 
+def p2_score(maxes: dict) -> int:
+    # Given a set of maxes, return the score for part two
+    return maxes['red'] * maxes['green'] * maxes['blue']
+
+
 def is_possible(constraint: dict, maxes: dict) -> bool:
     # Given a constraint and a set of maxes, return True if the constraint is possible
     # EG {'red': 12, 'green': 13, 'blue': 14} {'red': 2, 'green': 3, 'blue': 4}
@@ -53,3 +58,17 @@ if __name__ == '__main__':
         if is_possible(full_constraint, gm):
             full_score += gm['game']
     log.info(f"full {full_score=}")
+
+    # part two
+    ptwo_score = 0
+    for line in sample:
+        gm = game_max(line)
+        ptwo_score += p2_score(gm)
+    log.info(ptwo_score)
+    assert ptwo_score == 2286
+
+    score = 0
+    for line in full:
+        gm = game_max(line)
+        score += p2_score(gm)
+    log.info(f'full part two {score=}')
