@@ -45,7 +45,7 @@ def find_last_number(line: str) -> int:
     reversed_line = reverse_string(line)
     for integer, spelled in number_tuples:
         reverse_spelled = reverse_string(spelled)
-        log.info(f"  Now seeking -> {spelled=} aka {reverse_spelled} in {reversed_line}")
+        # log.info(f"  Now seeking -> {spelled=} aka {reverse_spelled} in {reversed_line}")
         if reversed_line.startswith(str(integer)): return integer
         if reversed_line.startswith(reverse_spelled): return integer
     return find_last_number(line[:-1])
@@ -55,6 +55,7 @@ def find_last_number(line: str) -> int:
 
 
 if __name__ == '__main__':
+    final_sum = 0
     for line in part_two.split('\n'):
         if len(line) == 0:
             log.info("Skipping zero lenggh line")
@@ -64,4 +65,9 @@ if __name__ == '__main__':
         log.info(f"  {first_num=}")
         last_num = find_last_number(line)
         log.info(f"  {last_num=}")
+        addend = first_num * 10 + last_num
+        log.info("  adding {addend=}")
+        final_sum += addend
+    log.info(f"  {final_sum=1}")
+    
 
