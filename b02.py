@@ -27,7 +27,7 @@ def determine_possibility(rows):
         is_possible = True
         for color in colors:
             is_possible = is_possible and largest[color] <= sample_constraint[color]
-        print(id, largest, is_possible)
+        # print(id, largest, is_possible)
         if is_possible:
             output_value += id
     return output_value
@@ -43,8 +43,13 @@ def determine_fewest(rows):
     return output_value
 
 if __name__ == '__main__':
-    for name, lines in {'sample': get_data_as_lines(2, 's'), 'full': get_data_as_lines(2)}.items():
+    for name, correct_possibility, correct_fewest, lines in [
+            ('sample',    8,  2286, get_data_as_lines(2, 's')),
+            ('full',   2348, 76008, get_data_as_lines(2)),
+            ]:
         possibility_value = determine_possibility(lines)
-        fewest_value = determine_fewest(lines)
+        fewest_value      = determine_fewest(lines)
         print(f'{name}: {possibility_value=} {fewest_value=}')
- 
+        assert possibility_value == correct_possibility
+        assert fewest_value == correct_fewest
+    print("SUCCESS")
