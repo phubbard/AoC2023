@@ -51,15 +51,12 @@ def find_last_number(line: str) -> int:
     return find_last_number(line[:-1])
 
 
-
-
-
 if __name__ == '__main__':
     final_sum = 0
     sample_data, full_data = get_data_lines(1)
     for line in full_data:
         if len(line) == 0:
-            log.info("Skipping zero lenggh line")
+            log.info("Skipping zero lengh line")
             continue
         log.info(f"considering: {line=}")
         first_num = find_first_number(line)
@@ -69,6 +66,7 @@ if __name__ == '__main__':
         addend = first_num * 10 + last_num
         log.info("  adding {addend=}")
         final_sum += addend
+    
     log.info(f"  {final_sum=}")
     
 
