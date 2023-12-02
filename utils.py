@@ -57,12 +57,14 @@ def get_column(data, col_idx):
 
 
 def get_data_as_lines(problem_number: int, suffix: str = '') -> list:
-    zero_padded = f"{problem_number:02}"
+    zero_padded = zero_pad(problem_number)
     filename = f'./data/{zero_padded}{suffix}.txt'
     return clean_lines(open(filename, 'r').readlines())
 
+
 def zero_pad(number, digits=2):
     return f"{number:0{digits}}"
+
 
 def get_data_lines(problem_number):
     # Return a tuple of (sample data, full data)
