@@ -1,5 +1,5 @@
 
-from itertools import permutations, combinations, combinations_with_replacement
+from itertools import permutations, combinations_with_replacement
 
 
 def find_permutations(input_chars, length=8):
