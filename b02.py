@@ -20,9 +20,20 @@ def get_largest(row):
                     largest_dict[c] = max(largest_dict[c], value)
     return id, largest_dict
 
-if __name__ == '__main__':
-    sample = get_data_as_lines(2, 's')
-    full = get_data_as_lines(2)
+def determine_sum(rows):
+    output_value = 0
+    for row in rows:
+        id, largest = get_largest(row)
+        is_possible = True
+        for color in colors:
+            is_possible = is_possible and largest[color] <= sample_constraint[color]
+        print(id, largest, is_possible)
+        if is_possible:
+            output_value += id
+    return output_value
 
-    for row in sample:
-        print(get_largest(row))
+if __name__ == '__main__':
+    for name, lines in {'sample': get_data_as_lines(2, 's'), 'full': get_data_as_lines(2)}.items():
+        output_value = determine_sum(lines)
+        print(f'{name}: {output_value=}')
+ 
