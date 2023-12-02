@@ -72,6 +72,8 @@ def get_data(problem_number: int, which: datafiles):
 
     return clean_lines(open(filename, 'r').readlines())
 
+def zero_pad(number, digits=2):
+    return f"{number:0{digits}}"
 
 def get_data_lines(problem_number):
     # Return a tuple of (sample data, full data)

@@ -2,7 +2,7 @@
 # anticipating files from brad and chris
 
 import logging
-from utils import get_data_lines
+from utils import get_data_lines, zero_pad
 
 logging.basicConfig(level=logging.DEBUG, format='%(pathname)s(%(lineno)s): %(levelname)s %(message)s')
 log = logging.getLogger()
@@ -50,23 +50,32 @@ def find_last_number(line: str) -> int:
         if reversed_line.startswith(reverse_spelled): return integer
     return find_last_number(line[:-1])
 
+PROBLEM = zero_pad(1)
 
 if __name__ == '__main__':
-    final_sum = 0
-    sample_data, full_data = get_data_lines(1)
-    for line in full_data:
-        if len(line) == 0:
-            log.info("Skipping zero lengh line")
-            continue
-        log.info(f"considering: {line=}")
-        first_num = find_first_number(line)
-        log.info(f"  {first_num=}")
-        last_num = find_last_number(line)
-        log.info(f"  {last_num=}")
-        addend = first_num * 10 + last_num
-        log.info("  adding {addend=}")
-        final_sum += addend
-    
-    log.info(f"  {final_sum=}")
+
+    for input_lines, expectation in [
+        (get_data_as_lines(PROBLEM, 's'),     142),
+        (get_data_as_lines(PROBLEM, ''),    54081),
+        (get_data_as_lines(PROBLEM, 's2'),    281),
+        (get_data_as_lines(PROBLEM, ''),    54649),
+    ]:
+        final_sum = 0
+        sample_data, full_data = get_data_lines(1)
+        for line in full_data:
+            if len(line) == 0:
+                log.info("Skipping zero lengh line")
+                continue
+            log.info(f"considering: {line=}")
+            first_num = find_first_number(line)
+            # log.info(f"  {first_num=}")
+            last_num = find_last_number(line)
+            # log.info(f"  {last_num=}")
+            addend = first_num * 10 + last_num
+            log.info("  adding {addend=}")
+            final_sum += addend
+        log.info(f"  {final_sum=}")
+        if final_sum != expectation:
+            log.error(f"Expected {expectation=}, got {final_sum=}")
     
 
