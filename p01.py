@@ -2,7 +2,7 @@
 # anticipating files from brad and chris
 
 import logging
-from utils import get_data_lines
+from utils import get_data_lines, get_data, datafiles
 
 logging.basicConfig(level=logging.DEBUG, format='%(pathname)s(%(lineno)s): %(levelname)s %(message)s')
 log = logging.getLogger()
@@ -36,7 +36,13 @@ def process_data(data: list) -> int:
 
 
 if __name__ == '__main__':
-    data, full_data = get_data_lines(1)
-    log.info(f"Sample: {process_data(data)=}")
+    sample_data = get_data(1, datafiles.sample)
+    full_data = get_data(1, datafiles.full)
+    p2_data = get_data(1, datafiles.part_two)
+
+    log.info(f"Sample: {process_data(sample_data)=}")
     log.info(f"Full: {process_data(full_data)=}")
+
+
+    # log.info(f"Part two: {process_data(p2_data)=}")
 

@@ -1,6 +1,8 @@
 
 from itertools import permutations, combinations, combinations_with_replacement
 from enum import Enum
+from pathlib import Path
+
 
 datafiles = Enum('file', ['sample', 'full', 'part_two'])
 
@@ -64,7 +66,10 @@ def get_data(problem_number: int, which: datafiles):
         datafiles.full: '',
         datafiles.part_two: 'p2',
     }
-    filename = f'./data/{problem_number:02}{suffixes[which]}.txt'
+    filename = Path(f'./data/{problem_number:02}{suffixes[which]}.txt')
+    if not filename.exists():
+        raise FileNotFoundError(f"File {filename} not found")
+
     return clean_lines(open(filename, 'r').readlines())
 
 
