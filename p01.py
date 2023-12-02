@@ -12,22 +12,20 @@ log = logging.getLogger()
 # Try the stabbylambda approach
 def expand_strings(line: str) -> str:
     remap = [
-        {'one': 'one1one'}, {'two': 'two2two'},
-        {'three': 'three3three'},
-        {'four': 'four4four'},
-        {'five': 'five5five'}, {'six': 'six6six'},
-        {'seven': 'seven7seven'},
-        {'eight': 'eight8eight'},
-        {'nine': 'nine9nine'}, {'zero': 'zero0zero'}
+        ('one', 'one1one'), ('two', 'two2two'),
+        ('three', 'three3three'),
+        ('four', 'four4four'),
+        ('five', 'five5five'), ('six', 'six6six'),
+        ('seven', 'seven7seven'),
+        ('eight', 'eight8eight'),
+        ('nine', 'nine9nine'), ('zero', 'zero0zero')
     ]
 
-    for idx in range(len(remap)):
-        src = list(remap[idx].keys())[0]
-        dest = list(remap[idx].values())[0]
+    for src, dest in remap:
         line = line.replace(src, dest)
     return line
 
-    
+
 def process_data(data: list) -> int:
     numbers = []
     for line in data:
