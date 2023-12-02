@@ -20,7 +20,7 @@ def get_largest(row):
                     largest_dict[c] = max(largest_dict[c], value)
     return id, largest_dict
 
-def determine_sum(rows):
+def determine_possibility(rows):
     output_value = 0
     for row in rows:
         id, largest = get_largest(row)
@@ -32,8 +32,19 @@ def determine_sum(rows):
             output_value += id
     return output_value
 
+def determine_fewest(rows):
+    output_value = 0
+    for row in rows:
+        id, largest = get_largest(row)
+        local_product = 1
+        for color in colors:
+            local_product *= largest[color]
+        output_value += local_product
+    return output_value
+
 if __name__ == '__main__':
     for name, lines in {'sample': get_data_as_lines(2, 's'), 'full': get_data_as_lines(2)}.items():
-        output_value = determine_sum(lines)
-        print(f'{name}: {output_value=}')
+        possibility_value = determine_possibility(lines)
+        fewest_value = determine_fewest(lines)
+        print(f'{name}: {possibility_value=} {fewest_value=}')
  
