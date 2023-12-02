@@ -1,6 +1,8 @@
 
 from itertools import permutations, combinations, combinations_with_replacement
+from enum import Enum
 
+datafiles = Enum('file', ['sample', 'full', 'part_two'])
 
 def find_permutations(input_chars, length=8):
     return permutations(input_chars, r=length)
@@ -54,6 +56,16 @@ def load_2d_arrays(problem_number):
 def get_column(data, col_idx):
     # No way to extract a column without numpy so Just Deal.
     return [row[col_idx] for row in data]
+
+
+def get_data(problem_number: int, which: datafiles):
+    suffixes = {
+        datafiles.sample: 's',
+        datafiles.full: '',
+        datafiles.part_two: 'p2',
+    }
+    filename = f'./data/{problem_number:02}{suffixes[which]}.txt'
+    return clean_lines(open(filename, 'r').readlines())
 
 
 def get_data_lines(problem_number):
