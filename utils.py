@@ -41,7 +41,7 @@ def load_2d_arrays(problem_number):
     data = make_2d_array(num_rows, num_cols)
     for row, line in enumerate(sample):
         for col, char in enumerate(line):
-            data[row][col] = int(char)
+            data[row][col] = char
     sample_2d = data
 
     num_rows = len(full)
@@ -49,7 +49,7 @@ def load_2d_arrays(problem_number):
     data = make_2d_array(num_rows, num_cols)
     for row, line in enumerate(full):
         for col, char in enumerate(line):
-            data[row][col] = int(char)
+            data[row][col] = char
     full_2d = data
 
     return sample_2d, full_2d
