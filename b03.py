@@ -69,6 +69,9 @@ class Cell:
     def cell_add_neighbor(self, cell):
         self.__cell_neighbors[cell] = True
 
+    def cell_get_neigbors(self):
+        return self.__cell_neighbors.keys()
+
     def __str__(self) -> str:
         neighbor_chars = [x.CELL_CHAR for x in self.__cell_neighbors.keys()]
         neighbor_string = "".join(neighbor_chars)
@@ -86,9 +89,18 @@ class Number:
             included_cells.add(current_cell)
             value = value * 10 + int(current_cell.CELL_CHAR)
             current_cell = current_cell.cell_get_right()
-        # finally, store as immutable set
-        self.NUMBER_VALUE = value
+
+        # Determine if any of the included cells have neighbors that are symbols
+        # Check all neighbors of all included cells
+        has_symbol_neighbor = False
+        for cell in included_cells:
+            for neighbor in cell.cell_get_neigbors():
+                if neighbor.CELL_CHAR in KNOWN_SYMBOLS:
+                    has_symbol_neighbor = True
+
+        self.NUMBER_VALUE          = value
         self.NUMBER_INCLUDED_CELLS = frozenset(included_cells)
+        self.NUMBER_HAS_SYMBOL_NEIGHBOR = has_symbol_neighbor
 
 
 if __name__ == '__main__':
@@ -102,10 +114,11 @@ if __name__ == '__main__':
         for cell in grid.GRID_CELLS.values():
             log.info(cell)
         for number in grid.GRID_NUMBERS:
-            log.info(f'{number.NUMBER_VALUE=}')
+            log.info(f'{number.NUMBER_VALUE=} {number.NUMBER_HAS_SYMBOL_NEIGHBOR=}')
         raise Exception("TODO: Implement me!")
 
 
 ## Todo cleanups, that explore vscode features:
 ##  - [ ] remove grid member of cell
 ##  - [ ] alter setting of self.GRID_CELLS to assign once and use set
+##  - [ ] rewrite number cell symbols as comprehension
