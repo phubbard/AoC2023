@@ -59,7 +59,7 @@ class Grid:
         for cell in self.GRID_CELLS.values():
             if not cell.CELL_CHAR in DIGITS: continue
             # assure that the cell isn't already part of an existing number
-            if any([cell in n.NUMBER_INCLUDED_CELLS for n in numbers]): continue
+            if any([cell in n.NUMBER_CELLS for n in numbers]): continue
             numbers.add(Number(cell))
         self.GRID_NUMBERS = frozenset(numbers)
 
@@ -126,28 +126,24 @@ class Number:
             value = value * 10 + int(current_cell.CELL_CHAR)
             current_cell = current_cell.cell_get_right()
 
-        number_neighbors = set()
-
+        neighbors = set()
         for cell in included_cells:
             for neighbor in cell.cell_get_neighbors():
-                number_neighbors.add(neighbor)
+                neighbors.add(neighbor)
         for cell in included_cells:
-            if cell in number_neighbors:            
-                number_neighbors.remove(cell)
+            if cell in neighbors:            
+                neighbors.remove(cell)
 
         # Determine if any of the included cells have neighbors that are symbols
-        has_symbol_neighbor = False
-        for neighbor in number_neighbors:
-            if neighbor.CELL_CHAR in KNOWN_SYMBOLS:
-                has_symbol_neighbor = True
+        has_symbol_neighbor = any([x.CELL_CHAR in KNOWN_SYMBOLS for x in neighbors])
 
-        self.NUMBER_VALUE          = value
-        self.NUMBER_NEIGHBORS      = frozenset(number_neighbors)
-        self.NUMBER_INCLUDED_CELLS = frozenset(included_cells)
-        self.NUMBER_IS_PART        = has_symbol_neighbor
+        self.NUMBER_VALUE     = value
+        self.NUMBER_CELLS     = frozenset(included_cells)
+        self.NUMBER_NEIGHBORS = frozenset(neighbors)
+        self.NUMBER_IS_PART   = has_symbol_neighbor
 
     def __str__(self) -> str:
-        return f"Number {self.NUMBER_VALUE} cells:{len(self.NUMBER_INCLUDED_CELLS)} neighbors:{len(self.NUMBER_NEIGHBORS)}"
+        return f"Number {self.NUMBER_VALUE} cells:{len(self.NUMBER_CELLS)} neighbors:{len(self.NUMBER_NEIGHBORS)}"
 
 class Gear:
     def __init__(self, cell, number1, number2):
