@@ -8,11 +8,11 @@ colors = ('red', 'green', 'blue')
 def get_largest(row):
     prefix = 'Game '
     if not row.startswith(prefix): raise Exception("BAD")
-    gamesplit = row.removeprefix(prefix).split(':')
-    if len(gamesplit) != 2: raise Exception("BAD")
-    id = int(gamesplit[0])
+    game_split = row.removeprefix(prefix).split(':')
+    if len(game_split) != 2: raise Exception("BAD")
+    id = int(game_split[0])
     largest_dict = {c:0 for c in colors}
-    for round in gamesplit[1].split(';'):
+    for round in game_split[1].split(';'):
         for phrase in round.split(','):
             for c in colors:
                 if c in phrase:
