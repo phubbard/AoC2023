@@ -36,9 +36,13 @@ class Grid:
                 self.__grid_try_add_neighbor(cell, (x+1, y+1))
 
         # Build Numbers
+        #  Note that this relies on order of construction of cells, which is
+        #  guaranteed by the order of the input data.
         numbers = set()
         for cell in self.GRID_CELLS.values():
             if not cell.CELL_CHAR in DIGITS: continue
+            # assure that the cell isn't already part of an existing number
+            if any([cell in n.NUMBER_INCLUDED_CELLS for n in numbers]): continue
             numbers.add(Number(cell))
         self.GRID_NUMBERS = frozenset(numbers)
 
