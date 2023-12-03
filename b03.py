@@ -55,7 +55,8 @@ class Cell:
     def __str__(self) -> str:
         neighbor_chars = [x.CELL_CHAR for x in self.__cell_neighbors.keys()]
         neighbor_string = "".join(neighbor_chars)
-        return f"Cell '{self.CELL_CHAR}' at ({self.CELL_X}, {self.CELL_Y}) neighbors:{neighbor_string}"
+        right_coda = f" right:{self.__cell_right.CELL_CHAR}" if self.__cell_right else ""
+        return f"Cell '{self.CELL_CHAR}' at ({self.CELL_X}, {self.CELL_Y}) neighbors:{neighbor_string}{right_coda}"
 
 if __name__ == '__main__':
     sample_data, full_data = load_2d_arrays(3)
