@@ -125,18 +125,17 @@ class Cell:
         return f"Cell '{self.CELL_CHAR}' at ({self.CELL_X}, {self.CELL_Y}) neighbors:{neighbor_string}{right_coda}"
 
 class Number:
-    def __init__(self, first_cell):
+    def __init__(self, cell):
         included_cells = set()
-        if first_cell.CELL_CHAR not in DIGITS:
-            raise Exception(f"Cannot create a Number from a non-digit cell: {first_cell}")
+        if cell.CELL_CHAR not in DIGITS:
+            raise Exception(f"Cannot create a Number from a non-digit cell: {cell}")
         value = 0
-        cell  = first_cell
         while cell and cell.CELL_CHAR in DIGITS:
             included_cells.add(cell)
             value = value * 10 + int(cell.CELL_CHAR)
             cell  = cell.CELL_RIGHT
 
-        neighbor_superset   = {x for cell in included_cells for x in cell.CELL_NEIGHBORS}
+        neighbor_superset   = {x for c in included_cells for x in c.CELL_NEIGHBORS}
         neighbors_pruned    = {x for x in neighbor_superset if x not in included_cells}
         has_symbol_neighbor = any(x.CELL_CHAR in KNOWN_SYMBOLS for x in neighbors_pruned)
 
