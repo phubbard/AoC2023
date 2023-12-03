@@ -19,7 +19,7 @@ class Grid:
             for x in range(self.GRID_MAX_X):
                 character = array_of_arrays[y][x]
                 ordinate  = (x, y)
-                cell = Cell(self, character, x, y)
+                cell = Cell(character, x, y)
                 safe_insert(ordinate, cell, self.GRID_CELLS)
                 if previous_cell: previous_cell.cell_set_right(cell)
                 previous_cell = cell
@@ -73,8 +73,7 @@ class Grid:
             cell.cell_add_neighbor(self.GRID_CELLS[ordinate])
 
 class Cell:
-    def __init__(self, grid, character, x, y):
-        self.CELL_GRID = grid
+    def __init__(self, character, x, y):
         self.CELL_CHAR = character
         self.CELL_X    = x
         self.CELL_Y    = y
