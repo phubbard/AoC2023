@@ -126,20 +126,13 @@ class Number:
             value = value * 10 + int(current_cell.CELL_CHAR)
             current_cell = current_cell.cell_get_right()
 
-        neighbors = set()
-        for cell in included_cells:
-            for neighbor in cell.cell_get_neighbors():
-                neighbors.add(neighbor)
-        for cell in included_cells:
-            if cell in neighbors:            
-                neighbors.remove(cell)
-
-        # Determine if any of the included cells have neighbors that are symbols
-        has_symbol_neighbor = any([x.CELL_CHAR in KNOWN_SYMBOLS for x in neighbors])
+        neighbor_superset   = {x for cell in included_cells for x in cell.cell_get_neighbors()}
+        neighbors_pruned    = {x for x in neighbor_superset if x not in included_cells}
+        has_symbol_neighbor = any([x.CELL_CHAR in KNOWN_SYMBOLS for x in neighbors_pruned])
 
         self.NUMBER_VALUE     = value
         self.NUMBER_CELLS     = frozenset(included_cells)
-        self.NUMBER_NEIGHBORS = frozenset(neighbors)
+        self.NUMBER_NEIGHBORS = frozenset(neighbors_pruned)
         self.NUMBER_IS_PART   = has_symbol_neighbor
 
     def __str__(self) -> str:
