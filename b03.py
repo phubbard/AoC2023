@@ -66,7 +66,7 @@ class Grid:
             for cell in self.GRID_CELLS.values():
                 if not cell.CELL_CHAR in DIGITS: continue
                 # assure that the cell isn't already part of an existing number
-                if any([cell in n.NUMBER_CELLS for n in numbers]): continue
+                if any(cell in n.NUMBER_CELLS for n in numbers): continue
                 numbers.add(Number(cell))
             return frozenset(numbers)
         self.GRID_NUMBERS = _build_numbers()
@@ -111,7 +111,7 @@ class Cell:
 
     def cell_freeze(self):
         self.CELL_NEIGHBORS = frozenset(self.__cell_neighbors.keys())
-        self.CELL_RIGHT = self.__cell_right
+        self.CELL_RIGHT     = self.__cell_right
         del self.__cell_neighbors
         del self.__cell_right
 
@@ -138,7 +138,7 @@ class Number:
 
         neighbor_superset   = {x for cell in included_cells for x in cell.CELL_NEIGHBORS}
         neighbors_pruned    = {x for x in neighbor_superset if x not in included_cells}
-        has_symbol_neighbor = any([x.CELL_CHAR in KNOWN_SYMBOLS for x in neighbors_pruned])
+        has_symbol_neighbor = any(x.CELL_CHAR in KNOWN_SYMBOLS for x in neighbors_pruned)
 
         self.NUMBER_VALUE     = value
         self.NUMBER_CELLS     = frozenset(included_cells)
@@ -150,10 +150,8 @@ class Number:
 
 class Gear:
     def __init__(self, cell, number1, number2):
-        self.GEAR_CELL    = cell
-        self.GEAR_NUMBER1 = number1
-        self.GEAR_NUMBER2 = number2
-        self.GEAR_RATIO   = number1.NUMBER_VALUE * number2.NUMBER_VALUE
+        self.GEAR_CELL  = cell
+        self.GEAR_RATIO = number1.NUMBER_VALUE * number2.NUMBER_VALUE
 
 if __name__ == '__main__':
     sample_data, full_data = load_2d_arrays(3)
