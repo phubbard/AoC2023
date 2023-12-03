@@ -13,29 +13,44 @@ class Grid:
         self.GRID_MAX_Y = len(array_of_arrays)
 
         # Construct Cells
-        self.GRID_CELLS = {}
-        for y in range(self.GRID_MAX_Y):
-            previous_cell = None
-            for x in range(self.GRID_MAX_X):
-                character = array_of_arrays[y][x]
-                ordinate  = (x, y)
-                cell = Cell(character, x, y)
-                safe_insert(ordinate, cell, self.GRID_CELLS)
-                if previous_cell: previous_cell.cell_set_right(cell)
-                previous_cell = cell
+        def _construct_cells():
+            """
+            Constructs and returns a dictionary of cells based on the given array of arrays.
+
+            Returns:
+                dict: A dictionary of cells, where the keys are the cell coordinates and the values are the Cell objects.
+            """
+            rv = {}
+            for y in range(self.GRID_MAX_Y):
+                previous_cell = None
+                for x in range(self.GRID_MAX_X):
+                    character = array_of_arrays[y][x]
+                    ordinate  = (x, y)
+
+                    cell = Cell(character, x, y)
+                    safe_insert(ordinate, cell, rv)
+                    if previous_cell: previous_cell.cell_set_right(cell)
+                    previous_cell = cell
+            return rv
+        self.GRID_CELLS = _construct_cells()
 
         # Associate Cell neighbors
-        for x in range(self.GRID_MAX_X):
-            for y in range(self.GRID_MAX_Y):
-                cell = self.GRID_CELLS[(x, y)]
-                self.__grid_try_add_neighbor(cell, (x-1, y-1))
-                self.__grid_try_add_neighbor(cell, (x-0, y-1))
-                self.__grid_try_add_neighbor(cell, (x+1, y-1))
-                self.__grid_try_add_neighbor(cell, (x-1, y-0))
-                self.__grid_try_add_neighbor(cell, (x+1, y-0))
-                self.__grid_try_add_neighbor(cell, (x-1, y+1))
-                self.__grid_try_add_neighbor(cell, (x-0, y+1))
-                self.__grid_try_add_neighbor(cell, (x+1, y+1))
+        def _associate_cell_neighbors():
+            """
+            Associates each cell with its neighbors.
+            """
+            for x in range(self.GRID_MAX_X):
+                for y in range(self.GRID_MAX_Y):
+                    cell = self.GRID_CELLS[(x, y)]
+                    self.__grid_try_add_neighbor(cell, (x-1, y-1))
+                    self.__grid_try_add_neighbor(cell, (x-0, y-1))
+                    self.__grid_try_add_neighbor(cell, (x+1, y-1))
+                    self.__grid_try_add_neighbor(cell, (x-1, y-0))
+                    self.__grid_try_add_neighbor(cell, (x+1, y-0))
+                    self.__grid_try_add_neighbor(cell, (x-1, y+1))
+                    self.__grid_try_add_neighbor(cell, (x-0, y+1))
+                    self.__grid_try_add_neighbor(cell, (x+1, y+1))
+        _associate_cell_neighbors()
 
         # Build Numbers
         #  Note that this relies on order of construction of cells, which is
@@ -57,8 +72,8 @@ class Grid:
             # log.info(f"Found gear at {cell}")
             for number in self.GRID_NUMBERS:
                 if cell in number.NUMBER_NEIGHBORS:
-                    gear_candidates[cell] = gear_candidates.get(cell, [])
-                    gear_candidates[cell].append(number)
+                    gc = gear_candidates[cell] = gear_candidates.get(cell, [])
+                    gc.append(number)
         for gear_cell, gear_list in gear_candidates.items():
             is_gear = len(gear_list) == 2
             if is_gear:
