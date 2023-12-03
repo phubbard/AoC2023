@@ -98,7 +98,7 @@ def coalesce_and_score(row, col, data) -> tuple:
 
 def process_data(data):
     # Given a 2D array of strings, return the sum of all valid numbers
-    # that are not adjacent to symbols.
+    # that are adjacent to symbols.
     row = 0
     col = 0
     score = 0
