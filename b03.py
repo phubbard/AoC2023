@@ -3,6 +3,8 @@ from utils import log, load_2d_arrays, safe_insert
 # Make a set of known symbols
 KNOWN_SYMBOLS = set("+*#$/%&@!?-=<>")
 
+GEAR_CHARACTER = '*'
+
 DIGITS = set("0123456789")
 
 class Grid:
@@ -46,6 +48,26 @@ class Grid:
             numbers.add(Number(cell))
         self.GRID_NUMBERS = frozenset(numbers)
 
+        # Determine gears
+        log.info("Determining gears")
+        gear_candidates = {}
+        gears = []
+        for cell in self.GRID_CELLS.values():
+            if cell.CELL_CHAR != GEAR_CHARACTER: continue
+            # log.info(f"Found gear at {cell}")
+            for number in self.GRID_NUMBERS:
+                if cell in number.NUMBER_NEIGHBORS:
+                    gear_candidates[cell] = gear_candidates.get(cell, [])
+                    gear_candidates[cell].append(number)
+        for gear_cell, gear_list in gear_candidates.items():
+            is_gear = len(gear_list) == 2
+            if is_gear:
+                gears.append(Gear(gear_cell, *gear_list))
+            # log.info(f"  gear {str(gear_cell)} {is_gear=}")
+            if len(gear_list) > 2:
+                log.info(f" SURPRISE! {gear_list=}")
+        self.GRID_GEARS = frozenset(gears)
+
     def __grid_try_add_neighbor(self, cell, ordinate):
         if ordinate in self.GRID_CELLS:
             cell.cell_add_neighbor(self.GRID_CELLS[ordinate])
@@ -69,7 +91,7 @@ class Cell:
     def cell_add_neighbor(self, cell):
         self.__cell_neighbors[cell] = True
 
-    def cell_get_neigbors(self):
+    def cell_get_neighbors(self):
         return self.__cell_neighbors.keys()
 
     def __str__(self) -> str:
@@ -90,34 +112,56 @@ class Number:
             value = value * 10 + int(current_cell.CELL_CHAR)
             current_cell = current_cell.cell_get_right()
 
-        # Determine if any of the included cells have neighbors that are symbols
-        # Check all neighbors of all included cells
-        has_symbol_neighbor = False
+        number_neighbors = set()
+
         for cell in included_cells:
-            for neighbor in cell.cell_get_neigbors():
-                if neighbor.CELL_CHAR in KNOWN_SYMBOLS:
-                    has_symbol_neighbor = True
+            for neighbor in cell.cell_get_neighbors():
+                number_neighbors.add(neighbor)
+        for cell in included_cells:
+            if cell in number_neighbors:            
+                number_neighbors.remove(cell)
+
+        # Determine if any of the included cells have neighbors that are symbols
+        has_symbol_neighbor = False
+        for neighbor in number_neighbors:
+            if neighbor.CELL_CHAR in KNOWN_SYMBOLS:
+                has_symbol_neighbor = True
 
         self.NUMBER_VALUE          = value
+        self.NUMBER_NEIGHBORS      = frozenset(number_neighbors)
         self.NUMBER_INCLUDED_CELLS = frozenset(included_cells)
         self.NUMBER_IS_PART        = has_symbol_neighbor
 
+    def __str__(self) -> str:
+        return f"Number {self.NUMBER_VALUE} cells:{len(self.NUMBER_INCLUDED_CELLS)} neighbors:{len(self.NUMBER_NEIGHBORS)}"
+
+class Gear:
+    def __init__(self, cell, number1, number2):
+        self.GEAR_CELL    = cell
+        self.GEAR_NUMBER1 = number1
+        self.GEAR_NUMBER2 = number2
+        self.GEAR_RATIO   = number1.NUMBER_VALUE * number2.NUMBER_VALUE
 
 if __name__ == '__main__':
     sample_data, full_data = load_2d_arrays(3)
-    for tag, dataset, expected_answer in [
-                ("sample", sample_data,    4361),
-                ("full",   full_data,    522726),
+    for tag, dataset, expected_p1_answer, expected_p2_answer in [
+                ("sample", sample_data,    4361,   467835),
+                ("full",   full_data,    522726, 81721933),
             ]:
-        log.info(f"{tag=} {expected_answer=}")
+        log.info(f"{tag=} part number sum expected: {expected_p1_answer=}")
         grid = Grid(dataset)
         # for cell in grid.GRID_CELLS.values(): log.info(cell)
         part_number_sum = 0
         for number in grid.GRID_NUMBERS:
             # log.info(f'{number.NUMBER_VALUE=} {number.NUMBER_IS_PART=}')
             if number.NUMBER_IS_PART: part_number_sum += number.NUMBER_VALUE
-        log.info(f"{expected_answer=} {part_number_sum=}")
-        assert expected_answer == part_number_sum
+        log.info(f"{expected_p1_answer=} {part_number_sum=}")
+        assert expected_p1_answer == part_number_sum
+
+        # Sum the gear ratios
+        gear_ratio_sum = sum(g.GEAR_RATIO for g in grid.GRID_GEARS)
+        log.info(f"{tag=} Gear ratio expected: {expected_p2_answer=} found: {gear_ratio_sum=}")
+        assert expected_p2_answer == gear_ratio_sum
     log.info("SUCCESS")
         
 
