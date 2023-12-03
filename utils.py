@@ -106,3 +106,11 @@ def draw_coordinate_line_closed(tuple_from, tuple_to):
 
     raise Exception("This was never finished.  Next time!")
 
+
+def safe_insert(key, value, dictish):
+    """If and only if the key is not present, insert it."""
+    if key in dictish:
+        existing = dictish[key]
+        raise Exception(f"Cannot supplant at {str(key)=} ...\n  EXISTING {str(existing)} \n  NEW      {str(value)}")
+    dictish[key] = value
+    return value
