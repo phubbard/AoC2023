@@ -48,6 +48,8 @@ class Grid:
                     self.__grid_try_add_neighbor(cell, (x-1, y+1))
                     self.__grid_try_add_neighbor(cell, (x-0, y+1))
                     self.__grid_try_add_neighbor(cell, (x+1, y+1))
+            
+            for cell in self.GRID_CELLS.values(): cell.cell_freeze()
         _associate_cell_neighbors()
 
         def _build_numbers():
@@ -103,16 +105,18 @@ class Cell:
         self.__cell_neighbors = {}
 
     def cell_set_right(self, cell):
+        if self.__cell_right:
+            raise Exception(f"Cannot set right cell twice: {self} {cell}")
         self.__cell_right = cell
 
-    def cell_get_right(self):
-        return self.__cell_right
+    def cell_freeze(self):
+        self.CELL_NEIGHBORS = frozenset(self.__cell_neighbors.keys())
+        self.CELL_RIGHT = self.__cell_right
+        del self.__cell_neighbors
+        del self.__cell_right
 
     def cell_add_neighbor(self, cell):
         self.__cell_neighbors[cell] = True
-
-    def cell_get_neighbors(self):
-        return self.__cell_neighbors.keys()
 
     def __str__(self) -> str:
         neighbor_chars = [x.CELL_CHAR for x in self.__cell_neighbors.keys()]
@@ -130,9 +134,9 @@ class Number:
         while current_cell and current_cell.CELL_CHAR in DIGITS:
             included_cells.add(current_cell)
             value = value * 10 + int(current_cell.CELL_CHAR)
-            current_cell = current_cell.cell_get_right()
+            current_cell = current_cell.CELL_RIGHT
 
-        neighbor_superset   = {x for cell in included_cells for x in cell.cell_get_neighbors()}
+        neighbor_superset   = {x for cell in included_cells for x in cell.CELL_NEIGHBORS}
         neighbors_pruned    = {x for x in neighbor_superset if x not in included_cells}
         has_symbol_neighbor = any([x.CELL_CHAR in KNOWN_SYMBOLS for x in neighbors_pruned])
 
