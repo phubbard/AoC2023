@@ -12,7 +12,6 @@ class Grid:
         self.GRID_MAX_X = len(array_of_arrays[0])
         self.GRID_MAX_Y = len(array_of_arrays)
 
-        # Construct Cells
         def _construct_cells():
             """
             Constructs and returns a dictionary of cells based on the given array of arrays.
@@ -34,7 +33,6 @@ class Grid:
             return rv
         self.GRID_CELLS = _construct_cells()
 
-        # Associate Cell neighbors
         def _associate_cell_neighbors():
             """
             Associates each cell with its neighbors.
@@ -52,36 +50,44 @@ class Grid:
                     self.__grid_try_add_neighbor(cell, (x+1, y+1))
         _associate_cell_neighbors()
 
-        # Build Numbers
-        #  Note that this relies on order of construction of cells, which is
-        #  guaranteed by the order of the input data.
-        numbers = set()
-        for cell in self.GRID_CELLS.values():
-            if not cell.CELL_CHAR in DIGITS: continue
-            # assure that the cell isn't already part of an existing number
-            if any([cell in n.NUMBER_CELLS for n in numbers]): continue
-            numbers.add(Number(cell))
-        self.GRID_NUMBERS = frozenset(numbers)
+        def _build_numbers():
+            """
+            Builds a set of Number objects based on the GRID_CELLS.
 
-        # Determine gears
-        log.info("Determining gears")
-        gear_candidates = {}
-        gears = []
-        for cell in self.GRID_CELLS.values():
-            if cell.CELL_CHAR != GEAR_CHARACTER: continue
-            # log.info(f"Found gear at {cell}")
-            for number in self.GRID_NUMBERS:
-                if cell in number.NUMBER_NEIGHBORS:
-                    gc = gear_candidates[cell] = gear_candidates.get(cell, [])
-                    gc.append(number)
-        for gear_cell, gear_list in gear_candidates.items():
-            is_gear = len(gear_list) == 2
-            if is_gear:
-                gears.append(Gear(gear_cell, *gear_list))
-            # log.info(f"  gear {str(gear_cell)} {is_gear=}")
-            if len(gear_list) > 2:
-                log.info(f" SURPRISE! {gear_list=}")
-        self.GRID_GEARS = frozenset(gears)
+            Note that this relies on order of construction of cells, which is
+            guaranteed by the order of the input data.
+
+            Returns:
+                frozenset: A frozenset containing the Number objects.
+            """
+            numbers = set()
+            for cell in self.GRID_CELLS.values():
+                if not cell.CELL_CHAR in DIGITS: continue
+                # assure that the cell isn't already part of an existing number
+                if any([cell in n.NUMBER_CELLS for n in numbers]): continue
+                numbers.add(Number(cell))
+            return frozenset(numbers)
+        self.GRID_NUMBERS = _build_numbers()
+
+        def _determine_gears():
+            gear_candidates = {}
+            gears = []
+            for cell in self.GRID_CELLS.values():
+                if cell.CELL_CHAR != GEAR_CHARACTER: continue
+                # log.info(f"Found gear at {cell}")
+                for number in self.GRID_NUMBERS:
+                    if cell in number.NUMBER_NEIGHBORS:
+                        gc = gear_candidates[cell] = gear_candidates.get(cell, [])
+                        gc.append(number)
+            for gear_cell, gear_list in gear_candidates.items():
+                is_gear = len(gear_list) == 2
+                if is_gear:
+                    gears.append(Gear(gear_cell, *gear_list))
+                # log.info(f"  gear {str(gear_cell)} {is_gear=}")
+                if len(gear_list) > 2:
+                    log.info(f" SURPRISE! {gear_list=}")
+            return frozenset(gears)
+        self.GRID_GEARS = _determine_gears()
 
     def __grid_try_add_neighbor(self, cell, ordinate):
         if ordinate in self.GRID_CELLS:
