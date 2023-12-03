@@ -130,11 +130,11 @@ class Number:
         if first_cell.CELL_CHAR not in DIGITS:
             raise Exception(f"Cannot create a Number from a non-digit cell: {first_cell}")
         value = 0
-        current_cell = first_cell
-        while current_cell and current_cell.CELL_CHAR in DIGITS:
-            included_cells.add(current_cell)
-            value = value * 10 + int(current_cell.CELL_CHAR)
-            current_cell = current_cell.CELL_RIGHT
+        cell  = first_cell
+        while cell and cell.CELL_CHAR in DIGITS:
+            included_cells.add(cell)
+            value = value * 10 + int(cell.CELL_CHAR)
+            cell  = cell.CELL_RIGHT
 
         neighbor_superset   = {x for cell in included_cells for x in cell.CELL_NEIGHBORS}
         neighbors_pruned    = {x for x in neighbor_superset if x not in included_cells}
