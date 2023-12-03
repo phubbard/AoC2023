@@ -161,7 +161,7 @@ if __name__ == '__main__':
             ]:
         log.info(f"{tag=} part number sum expected: {expected_p1_answer=}")
         grid = Grid(dataset)
-        # for cell in grid.GRID_CELLS.values(): log.info(cell)
+
         part_number_sum = 0
         for number in grid.GRID_NUMBERS:
             # log.info(f'{number.NUMBER_VALUE=} {number.NUMBER_IS_PART=}')
@@ -169,14 +169,8 @@ if __name__ == '__main__':
         log.info(f"{expected_p1_answer=} {part_number_sum=}")
         assert expected_p1_answer == part_number_sum
 
-        # Sum the gear ratios
         gear_ratio_sum = sum(g.GEAR_RATIO for g in grid.GRID_GEARS)
         log.info(f"{tag=} Gear ratio expected: {expected_p2_answer=} found: {gear_ratio_sum=}")
         assert expected_p2_answer == gear_ratio_sum
     log.info("SUCCESS")
         
-
-## Todo cleanups, that explore vscode features:
-##  - [ ] remove grid member of cell
-##  - [ ] alter setting of self.GRID_CELLS to assign once and use set
-##  - [ ] rewrite number cell symbols as comprehension
