@@ -100,23 +100,26 @@ class Number:
 
         self.NUMBER_VALUE          = value
         self.NUMBER_INCLUDED_CELLS = frozenset(included_cells)
-        self.NUMBER_HAS_SYMBOL_NEIGHBOR = has_symbol_neighbor
+        self.NUMBER_IS_PART        = has_symbol_neighbor
 
 
 if __name__ == '__main__':
     sample_data, full_data = load_2d_arrays(3)
     for tag, dataset, expected_answer in [
-                ("sample", sample_data,   7),
-                ("full",   full_data,   336),
+                ("sample", sample_data,    4361),
+                ("full",   full_data,    522726),
             ]:
         log.info(f"{tag=} {expected_answer=}")
         grid = Grid(dataset)
-        for cell in grid.GRID_CELLS.values():
-            log.info(cell)
+        # for cell in grid.GRID_CELLS.values(): log.info(cell)
+        part_number_sum = 0
         for number in grid.GRID_NUMBERS:
-            log.info(f'{number.NUMBER_VALUE=} {number.NUMBER_HAS_SYMBOL_NEIGHBOR=}')
-        raise Exception("TODO: Implement me!")
-
+            # log.info(f'{number.NUMBER_VALUE=} {number.NUMBER_IS_PART=}')
+            if number.NUMBER_IS_PART: part_number_sum += number.NUMBER_VALUE
+        log.info(f"{expected_answer=} {part_number_sum=}")
+        assert expected_answer == part_number_sum
+    log.info("SUCCESS")
+        
 
 ## Todo cleanups, that explore vscode features:
 ##  - [ ] remove grid member of cell
