@@ -9,7 +9,6 @@ def winning_numbers(line: str) -> list:
     card1_sl = two_lists[0].split(':')[1].strip().split(' ')
     card2_sl = two_lists[1].split(' ')
 
-
     c1_filtered = list(filter(lambda x: len(x.strip()) > 0, card1_sl))
     c2_filtered = list(filter(lambda x: len(x.strip()) > 0, card2_sl))
 
@@ -26,7 +25,7 @@ def winning_numbers(line: str) -> list:
 def score_game(score_len) -> int:
     if score_len == 0:
         return 0
-    return pow(2, score_len  - 1)
+    return pow(2, score_len - 1)
 
 
 def score_data(data: list):
@@ -36,7 +35,6 @@ def score_data(data: list):
     print(f"Total: {total}")
 
     return total
-
 
 
 if __name__ == '__main__':
