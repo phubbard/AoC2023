@@ -115,6 +115,17 @@ def process_data(data):
     return score
 
 
+def adjacency_list(row, col, data):
+    # Given a row, col, and data, return a list of all adjacent cells
+    # that are symbols.
+    adjacent = get_neighbors(row, col, data)
+    valid = []
+    for cell in adjacent:
+        if cell in KNOWN_SYMBOLS:
+            valid.append(cell)
+    return valid
+
+
 if __name__ == '__main__':
     sample, full = load_2d_arrays(3)
     log.info(f"{sample=}")
