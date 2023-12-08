@@ -5,9 +5,9 @@ def score_data(data):
 
 if __name__ == '__main__':
     sample_data, full_data = get_data_lines(4)
-    for dataset, expected_p2_answer in [
-                (sample_data,      30),
-                (full_data,   6284877),
+    for dataset, expected_p1_answer, expected_p2_answer in [
+                (sample_data,    13,      30),
+                (full_data,   26443, 6284877),
             ]:
         current_card = 1
         card_win_dict = {}
@@ -28,7 +28,7 @@ if __name__ == '__main__':
                 instance_dict[adjusted] += card_instance
         for card_number, instances in instance_dict.items():
             log.info(f"{card_number=} had {instances=}")
-        total_instances = sum (instance_dict.values())
+        total_instances = sum(instance_dict.values())
         log.info(f"{total_instances=}")
         assert total_instances == expected_p2_answer
     log.info(f"Success")
