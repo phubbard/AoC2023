@@ -5,6 +5,7 @@ from utils import get_data_lines
 @dataclass
 class Game:
     number: int = 0
+    count: int = 1
     my_numbers: list = None
     winning_numbers: list = None
     matching_numbers: list = None
@@ -58,8 +59,21 @@ def score_data(data: list):
     return total
 
 
+def bump_card_counts(cards: list, card):
+    for idx in range(card.number, card.number + len(card.matching_numbers)):
+        cards[idx].count += card.count
+    return cards
+
+
 def part_two(game) -> int:
-    # TODO
+    # Data structures: List of Games
+    scorecards = [parse_game(x) for x in game]
+    for card in scorecards:
+        if len(card.matching_numbers) > 0:
+            bump_card_counts(scorecards, card)
+
+    score = sum([x.count for x in scorecards])
+    print(f"Score: {score}")
     return 30
 
 
@@ -68,3 +82,4 @@ if __name__ == '__main__':
     assert score_data(sample) == 13
     assert score_data(full) == 26443
     assert part_two(sample) == 30
+    part_two(full)
