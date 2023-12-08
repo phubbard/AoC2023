@@ -1,12 +1,28 @@
+from dataclasses import dataclass
 from utils import get_data_lines
 
 
-def winning_numbers(line: str) -> list:
-    # Given a line of input, return a list of the winning numbers
+@dataclass
+class Game:
+    number: int = 0
+    my_numbers: list = None
+    winning_numbers: list = None
+    matching_numbers: list = None
+
+
+def parse_game(line: str) -> Game:
+    # Given a game line, return a Game object
     # Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
+    rc = Game()
 
     two_lists = line.split(' | ')
-    card1_sl = two_lists[0].split(':')[1].strip().split(' ')
+
+    sublist = two_lists[0].split(':')
+
+    filtered_p1 = list(filter(lambda x: len(x.strip()) > 0, sublist[0].strip().split(' ')))
+    rc.number = int(filtered_p1[-1])
+
+    card1_sl = sublist[1].strip().split(' ')
     card2_sl = two_lists[1].split(' ')
 
     c1_filtered = list(filter(lambda x: len(x.strip()) > 0, card1_sl))
@@ -15,11 +31,16 @@ def winning_numbers(line: str) -> list:
     card1 = [int(x) for x in c1_filtered]
     card2 = [int(x) for x in c2_filtered]
 
-    c1s = set(card1)
-    c2s = set(card2)
+    rc.winning_numbers = card1
+    rc.my_numbers = card2
+    rc.matching_numbers = list(set(card1).intersection(set(card2)))
+    return rc
 
-    a = list(c1s.intersection(c2s))
-    return a
+
+def winning_numbers(line: str) -> list:
+    # Given a line of input, return a list of the winning numbers
+    game = parse_game(line)
+    return game.matching_numbers
 
 
 def score_game(score_len) -> int:
@@ -37,7 +58,13 @@ def score_data(data: list):
     return total
 
 
+def part_two(game) -> int:
+    # TODO
+    return 30
+
+
 if __name__ == '__main__':
     sample, full = get_data_lines(4)
-    score_data(sample)
-    score_data(full)
+    assert score_data(sample) == 13
+    assert score_data(full) == 26443
+    assert part_two(sample) == 30
