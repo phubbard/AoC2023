@@ -11,11 +11,10 @@ class RaceSpec:
 
 
 if __name__ == '__main__':
-    # sample_data, full_data = get_data_lines(6)
-    sample_data = ["Time:      7  15   30",
-                   "Distance:  9  40  200"]
+    sample_data, full_data = get_data_lines(6)
     for dataset, expected_p1_answer, expected_p2_answer in [
                     (sample_data,        -1,      -1),
+                    (full_data,          -1,      -1),
                 ]:
         time_array = None
         distance_array = None
