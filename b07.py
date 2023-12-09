@@ -1,9 +1,25 @@
 from utils import get_data_lines, log
 
 
+SCORE_5_OF_A_KIND = 7
+SCORE_4_OF_A_KIND = 6
+SCORE_FULL_HOUSE  = 5
+SCORE_3_OF_A_KIND = 4
+SCORE_2_PAIR      = 3
+SCORE_1_PAIR      = 2
+SCORE_HIGH_CARD   = 1
+
+
 class Hand:
     def __init__(self, cards):
-        self.H_CARDS = cards
+        raw_histogram = {}
+        for card in cards:
+            value = raw_histogram.get(card, 0)
+            raw_histogram[card] = value + 1
+        sorted_histogram = sorted(raw_histogram.items(), key=lambda x: x[1], reverse=True)
+
+        self.H_CARDS     = cards
+        log.info(f"{self.H_CARDS=} has sorted histogram {sorted_histogram=}")
 
     def __repr__(self):
         return f"Hand {self.H_CARDS=}"
