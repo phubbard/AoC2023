@@ -74,7 +74,7 @@ def part_two(game) -> int:
 
     score = sum([x.count for x in scorecards])
     print(f"Score: {score}")
-    return 30
+    return score
 
 
 if __name__ == '__main__':
@@ -82,4 +82,4 @@ if __name__ == '__main__':
     assert score_data(sample) == 13
     assert score_data(full) == 26443
     assert part_two(sample) == 30
-    part_two(full)
+    assert part_two(full) == 6284877
