@@ -19,7 +19,7 @@ class Hand:
             raw_histogram[card] = value + 1
         sorted_histogram = sorted(raw_histogram.items(), key=lambda x: x[1], reverse=True)
         first_card, first_count   = sorted_histogram[0]
-        second_card, second_count = sorted_histogram[1]
+        second_card, second_count = sorted_histogram[1] if len(sorted_histogram) > 1 else (None, 0)
 
         if first_count == 5:
             category = SCORE_5_OF_A_KIND
@@ -58,8 +58,8 @@ def compare_hand_strength(hand1, hand2):
 if __name__ == '__main__':
     sample_data, full_data = get_data_lines(7)
     for dataset, expected_p1_answer, expected_p2_answer in [
-        (sample_data,    6440,      -1),
-        (full_data,        -1,      -1),
+        (sample_data,      6440,      -1),
+        (full_data,   255048101,      -1),
     ]:
         raw_hands = []
         for row in dataset:
