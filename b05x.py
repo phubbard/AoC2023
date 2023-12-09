@@ -1,3 +1,7 @@
+# This attempt is a good one, but it got stuck with the bug on Monorange
+# transformer refracting where I was mistakenly multiply evaluating some
+# subranges.  Chris's answer better, so moving on!
+
 from utils import get_data_lines, log
 import time
 
