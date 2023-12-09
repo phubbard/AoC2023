@@ -12,22 +12,19 @@ class Transformer:
         self.__range_map.append((destination_start, source_start, count))
 
     def concretize(self):
-        remapped = {}
-        for destination_start, source_start, count in self.__range_map:
-            for i in range(count):
-                remapped[source_start + i] =  destination_start + i
-        self.__mapping = remapped
-        del self.__range_map
+        pass
 
     def transform(self, source):
-        return self.__mapping.get(source, source)
-    
+        for destination_start, source_start, count in self.__range_map:
+            if source_start <= source < source_start+count:
+                return destination_start + (source - source_start)
+        return source
 
 if __name__ == '__main__':
     sample_data, full_data = get_data_lines(5)
     for dataset, expected_p1_answer, expected_p2_answer in [
-                (sample_data,    35,      -1),
-                (full_data,      -1,      -1),
+                (sample_data,        35,      -1),
+                (full_data,   174137457,      -1),
             ]:
         transformers = []
         current_transformer = None
