@@ -1,5 +1,5 @@
 from utils import get_data_lines, log
-
+from functools import cmp_to_key
 
 SCORE_5_OF_A_KIND = 6
 SCORE_4_OF_A_KIND = 5
@@ -8,6 +8,8 @@ SCORE_3_OF_A_KIND = 3
 SCORE_2_PAIR      = 2
 SCORE_1_PAIR      = 1
 SCORE_HIGH_CARD   = 0
+
+TIEBREAK = 'AKQJT987654321'
 
 class Hand:
     def __init__(self, cards, bid):
@@ -41,9 +43,16 @@ class Hand:
         self.H_BID        = bid
 
     def __repr__(self):
-        return f"Hand {self.H_CARDS=} with {self.H_CATEGORY=} and {self.H_WINNINGS=}"
+        return f"Hand {self.H_CARDS=} with {self.H_CATEGORY=} and {self.H_BID=}"
     
     def __str__(self): return repr(self)
+
+
+def compare_hand_strength(hand1, hand2):
+    for card1, card2 in zip(hand1.H_CARDS, hand2.H_CARDS):
+        if card1 == card2: continue
+        return TIEBREAK.index(card1) - TIEBREAK.index(card2) 
+    return 0
 
 
 if __name__ == '__main__':
@@ -52,12 +61,18 @@ if __name__ == '__main__':
         (sample_data,      -1,      -1),
         (full_data,        -1,      -1),
     ]:
-        winnings = 0
+        raw_hands = []
         for row in dataset:
             hand_cards, bid = row.split()
             hand = Hand(hand_cards, int(bid))
             log.info(f"{hand=} {bid=}")
-            winnings += hand.H_WINNINGS
+            raw_hands.append(hand)
+
+        # Rank the hands, first by 
+        strength_sorted_hands = sorted(raw_hands, key=cmp_to_key(compare_hand_strength), reverse=False)
+        full_sorted_hands     = sorted(strength_sorted_hands, key=lambda x: x.H_CATEGORY, reverse=True)
+        for hand in strength_sorted_hands: log.info(f"strengthsort: {hand=}")
+        for hand in full_sorted_hands:     log.info(f"fullsort: {hand=}")
 
         found_p1_answer = winnings
         log.info(f"{expected_p1_answer=} {found_p1_answer=}")
