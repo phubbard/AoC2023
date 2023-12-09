@@ -11,4 +11,3 @@ if __name__ == '__main__':
     for line in full:
         data.append([int(x) for x in line.split()])
 
-    pass
