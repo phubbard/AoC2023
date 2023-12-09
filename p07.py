@@ -1,13 +1,22 @@
+from functools import cmp_to_key
 from utils import get_data_lines, log
 
 
+def compare_qs_style(a, b):
+    rc = compare_hands(a, b)
+    log.info(f"{a=} {b=} {rc=}")
+    if rc == "=":
+        return 0
+    if rc == ">":
+        return 1
+    return -1
 
 
 def compare_eqr_hands(a: str, b: str) -> str:
     # Compare two hands of equal rank
     # Return ">" if a wins, "<" if b wins, "=" if tie
     card_strength = "AKQJT98765432"
-    log.info(f"Comparing {a=} {b=}")
+    log.debug(f"Comparing {a=} {b=}")
     cur_idx = 0
     while cur_idx < len(a) - 1:
         a_card = a[cur_idx]
@@ -82,6 +91,7 @@ test_hands = [
     {'a': '33332', 'b': '2AAAA', 'expected': '>'},
     {'a': '77888', 'b': '77788', 'expected': '>'},
     {'a': '22222', 'b': '22222', 'expected': '='},
+    {'a': 'KK677', 'b': 'T55J5', 'expected': '<'},
 ]
 
 
@@ -95,8 +105,32 @@ if __name__ == '__main__':
     validate_hand_comparisons()
 
     sample, full = get_data_lines(7)
-    winnings = 0
+    games = {}
     for line in sample:
         cards, bid = line.split()
-        winnings += (int(bid) * rank_hand(cards))
+        games[cards] = int(bid)
+
+    sorted_cards = sorted(games.keys(), key=cmp_to_key(compare_qs_style))
+    for cards in sorted_cards:
+        log.info(f"{cards=} {games[cards]=}")
+
+    winnings = 0
+    for idx, hand in enumerate(sorted_cards):
+        winnings += games[hand] * (idx + 1)
+
     log.info(f"sample {winnings=}")
+
+    games = {}
+    for line in full:
+        cards, bid = line.split()
+        games[cards] = int(bid)
+
+    sorted_cards = sorted(games.keys(), key=cmp_to_key(compare_qs_style))
+    for cards in sorted_cards:
+        log.info(f"{cards=} {games[cards]=}")
+
+    winnings = 0
+    for idx, hand in enumerate(sorted_cards):
+        winnings += games[hand] * (idx + 1)
+
+    log.info(f"full {winnings=}")
