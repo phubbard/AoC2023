@@ -18,7 +18,7 @@ def compare_eqr_hands(a: str, b: str) -> str:
     card_strength = "AKQJT98765432"
     log.debug(f"Comparing {a=} {b=}")
     cur_idx = 0
-    while cur_idx < len(a) - 1:
+    while cur_idx < len(a):
         a_card = a[cur_idx]
         b_card = b[cur_idx]
         a_str = card_strength.index(a_card)
