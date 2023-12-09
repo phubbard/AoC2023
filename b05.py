@@ -21,7 +21,7 @@ if __name__ == '__main__':
     sample_data, full_data = get_data_lines(5)
     for dataset, expected_p1_answer, expected_p2_answer in [
                 (sample_data,        35,      46),
-                (full_data,   174137457,      -1),
+                (full_data,   174137457, 1493866),
             ]:
         transformers = []
         current_transformer = None
@@ -87,5 +87,24 @@ if __name__ == '__main__':
 
     log.info(f"Success")
 
+# VERY LONG RUN TRANSCRIPT SNIPPETS:
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(67): INFO This will need to run 2398198298 times
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(74): INFO Seed 1132132257 count 323430997 yields...
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(82): INFO New minimum 2774465761 found at 1132132257 count 323430997 with annotation Seed 1132132257, soil 2060608563, fertilizer 4111587153, water 3317982992, light 3875532737, temperature 3527232275, humidity 2021460085, location 2774465761,
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(79): INFO timestamp_seconds=1702084467.162698: Runs so far 1000000
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(79): INFO timestamp_seconds=1702084480.1291494: Runs so far 2000000
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(79): INFO timestamp_seconds=1702084493.16586: Runs so far 3000000
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(79): INFO timestamp_seconds=1702084506.2742686: Runs so far 4000000
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(79): INFO timestamp_seconds=1702084519.2258282: Runs so far 5000000
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(79): INFO timestamp_seconds=1702084532.2494774: Runs so far 6000000
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(79): INFO timestamp_seconds=1702084545.2539265: Runs so far 7000000
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(79): INFO timestamp_seconds=1702084558.1465757: Runs so far 8000000
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(79): INFO timestamp_seconds=1702084571.0007048: Runs so far 9000000
 
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(79): INFO timestamp_seconds=1702113684.0281627: Runs so far 2394000000
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(79): INFO timestamp_seconds=1702113698.9208403: Runs so far 2395000000
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(79): INFO timestamp_seconds=1702113713.8153803: Runs so far 2396000000
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(79): INFO timestamp_seconds=1702113728.6360059: Runs so far 2397000000
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(79): INFO timestamp_seconds=1702113743.5745652: Runs so far 2398000000
+# /cygdrive/c/home/bhyslop/phubbard/AoC2023/b05.py(85): INFO expected_p2_answer=-1 found_p2_answer=1493866
         
