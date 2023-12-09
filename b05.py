@@ -1,5 +1,5 @@
 from utils import get_data_lines, log
-
+import time
 
 class Transformer:
 
@@ -59,12 +59,24 @@ if __name__ == '__main__':
         assert found_p1_answer == expected_p1_answer
 
         log.info(f"Calculating minimum for part two interpretation of seeds")
+
+        total_runs = 0
+        for x in range(0, len(seeds) // 2):
+            total_runs += seeds[x*2+1]
+
+        log.info(f"This will need to run {total_runs} times")
+
+        runs_so_far = 0
         minimum_final = None
         for x in range(0, len(seeds) // 2):
             seed  = seeds[x*2]
             count = seeds[x*2+1]
             log.info(f"Seed {seed} count {count} yields...")
             for increment in range(0, count):
+                runs_so_far += 1
+                if runs_so_far % 1000000 == 0:
+                    timestamp_seconds = time.time()
+                    log.info(f"{timestamp_seconds=}: Runs so far {runs_so_far}")                
                 value, annotation = _calculate_one_seed(seed + increment)
                 if minimum_final is None or value < minimum_final:
                     log.info(f"New minimum {value} found at {seed} count {count} with annotation {annotation}")
