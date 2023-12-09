@@ -1,10 +1,8 @@
 from utils import get_data_lines
 from multiprocessing import Pool
 from functools import lru_cache
-from math import pow
 from itertools import batched, starmap
 
-INT_MAX = pow(2, 35) - 1
 xforms = []
 
 
@@ -26,19 +24,20 @@ class Transform:
         return src
 
 
-@lru_cache(maxsize=1048596)
+# @lru_cache(maxsize=1048596)
 def run_xforms(value: int) -> int:
     global xforms
-    global_min = INT_MAX
+    global_min = 1e9
     for xformer in xforms:
         value = xformer.lookup(value)
         global_min = min(global_min, value)
-    return global_min
+    return int(global_min)
 
 
-def worker_fn(seed_min, seed_max) -> int:
+def worker_fn(seed_min: int, seed_count: int) -> int:
     # Process a range of seeds and return the minimum value found
     global_min = run_xforms(seed_min)
+    seed_max = seed_min + seed_count
     for seed in range(seed_min, seed_max):
         global_min = int(min(global_min, run_xforms(seed)))
     print(f"Worker {seed_min},{seed_max} {seed_max - seed_min=} returning {global_min=}")
@@ -83,8 +82,7 @@ def parse_inp_lines(data: list):
     print(f"{total_search_count=}")
     pool = Pool()
 
-    l_global_min = INT_MAX
-    results = pool.starmap(worker_fn, seed_ranges)
+    results = starmap(worker_fn, seed_ranges)
     l_global_min = int(min(results))
 
     print(f"part 2 {l_global_min=}")
