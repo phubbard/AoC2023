@@ -12,8 +12,9 @@ class Transformer:
         self.__range_map.append((destination_start, source_start, count))
         
     def range_descriptions(self):
-        return [f"{source_start=} goes to {destination_start=} for {count}" 
-                for destination_start, source_start, count in self.__range_map]  
+        facts = [(ss, ss + c - 1, ds, ds + c - 1) for ds, ss, c in self.__range_map]
+        sorted_facts = sorted(facts, key=lambda x: x[0])
+        return [f"  {ss}-{se} to {ds}-{de}" for ss, se, ds, de in sorted_facts]  
 
     def transform(self, source):
         for destination_start, source_start, count in self.__range_map:
@@ -26,18 +27,18 @@ class Transformer:
         the transformer.  Additionally return monoranges for any original
         values not transformed."""
         uncut_monoranges = [monorange]
-
+        log.info(f"Refracting  --> {uncut_monoranges}")
         cut_monoranges = []
         for destination_start, source_start, count in self.__range_map:
             for monorange in uncut_monoranges:
                 if monorange.MR_LAST < source_start:
-                    log.info("Whole monorange is before the rangemap segment: no transform")
+                    log.info("    Whole monorange is before the rangemap segment: no transform")
                     cut_monoranges.append(monorange)
                 elif monorange.MR_FIRST >= source_start + count:
-                    log.info("Whole monorange is after the rangemap segment: no transform")
+                    log.info("    Whole monorange is after the rangemap segment: no transform")
                     cut_monoranges.append(monorange)
                 else:
-                    log.info("At least one portion of the monorange must be transformed...")
+                    log.info("    At least one portion of the monorange must be transformed...")
                     prefix  = None
                     infix   = None
                     postfix = None
@@ -45,14 +46,14 @@ class Transformer:
                     first = monorange.MR_FIRST
                     last  = monorange.MR_LAST
                     if first < source_start:
-                        log.info("The first part of the monorange is not transformed")
+                        log.info("    The first part of the monorange is not transformed")
                         prefix = Monorange(first, source_start-1)
                         first = source_start
                     if last >= source_start + count:
-                        log.info("The last part of the monorange is not transformed")
+                        log.info("    The last part of the monorange is not transformed")
                         postfix = Monorange(source_start+count, last)
                         last = source_start + count - 1
-                    log.info("The middle part of the monorange is transformed")
+                    log.info("    The middle part of the monorange is transformed")
                     infix = Monorange(destination_start + (first - source_start),
                                       destination_start + (last  - source_start))
                     if prefix:  cut_monoranges.append(prefix)
@@ -60,7 +61,7 @@ class Transformer:
                     if postfix: cut_monoranges.append(postfix)
             uncut_monoranges = cut_monoranges
             cut_monoranges = []
-        log.info(f"Returning   --> {uncut_monoranges}")
+        log.info(f"  Returning --> {uncut_monoranges}")
         return uncut_monoranges
 
 
