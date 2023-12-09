@@ -1,5 +1,9 @@
-from utils import get_data_lines, log
+# Mothballing my stumbling into trying to make a too-complex pass fail
+# criteria.  I didn't get to an answer before Chris's handmath deduced
+# the 'gotcha' of this problem, which was big ints.  I'm going to
+# mothball.
 
+from utils import get_data_lines, log
 
 class RaceSpec:
     def __init__(self, time, distance):
@@ -26,29 +30,39 @@ if __name__ == '__main__':
                     (sample_data,       288,      -1),
                     (full_data,     1155175,      -1),
                 ]:
-        time_array = None
-        distance_array = None
+        p1_time_array     = None
+        p1_distance_array = None
+        p2_time_array     = None
+        p2_distance_array = None
         for row in dataset:
             if 'Time' in row:
-                if time_array is not None: raise Exception("Multiple time arrays")
-                time_array = [int(x) for x in dataset[0].split(':')[1].split()]
+                if p1_time_array is not None: raise Exception("Multiple time arrays")
+                p1_time_array = [int(x) for x in dataset[0].split(':')[1].split()]
+                p2_time_array = [int(x) for x in dataset[1].split(':')[1].split()]
             elif 'Distance' in row:
-                if distance_array is not None: raise Exception("Multiple distance arrays")
-                distance_array = [int(x) for x in dataset[1].split(':')[1].split()]
+                if p1_distance_array is not None: raise Exception("Multiple distance arrays")
+                p1_distance_array = [int(x) for x in dataset[1].split(':')[1].split()]
             else: raise Exception(f"Unknown row: {row}")
-        assert len(time_array) == len(distance_array), \
+        assert len(p1_time_array) == len(p1_distance_array), \
             "Time and distance arrays must be the same length"
         
         # Now we have two integer arrays to process
         found_p1_answer = 1
-        for time, distance in zip(time_array, distance_array):
-            race_spec = RaceSpec(time, distance)
-            win_count = race_spec.calculate_ways_to_win()
-            found_p1_answer *= win_count
-            log.info(f"Considering {race_spec=} with {win_count=} ways to win")
+        for time, distance in zip(p1_time_array, p1_distance_array):
+            p1_race_spec = RaceSpec(time, distance)
+            p1_win_count = p1_race_spec.calculate_ways_to_win()
+            found_p1_answer *= p1_win_count
+            log.info(f"Considering {p1_race_spec=} with {p1_win_count=} ways to win")
         
         log.info(f"{expected_p1_answer=} {found_p1_answer=}")
         assert expected_p1_answer == found_p1_answer
+
+        found_p2_answer = 1
+        p2_race_spec = RaceSpec(prod(p1_time_array), prod(p1_distance_array))
+        log.info(f"Considering {p2_race_spec=} ...")
+
+        log.info(f"{expected_p2_answer=} {found_p2_answer=}")
+        assert expected_p2_answer == found_p2_answer
 
     log.info(f"Success")
 
