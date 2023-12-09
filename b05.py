@@ -44,7 +44,7 @@ if __name__ == '__main__':
             for transformer in transformers:
                 element = transformer.transform(element)
                 annotation = f"{annotation}{transformer.TRANSFORMER_TAG} {element}, "
-            log.info(f"{annotation}")
+            # log.info(f"{annotation}")
             return element, annotation
 
         log.info(f"Calculating minimum for part one interpretation of seeds")
@@ -66,9 +66,9 @@ if __name__ == '__main__':
             log.info(f"Seed {seed} count {count} yields...")
             for increment in range(0, count):
                 value, annotation = _calculate_one_seed(seed + increment)
-            if minimum_final is None or value < minimum_final:
-                log.info(f"New minimum {value} found at {seed} count {count} with annotation {annotation}")
-                minimum_final = value
+                if minimum_final is None or value < minimum_final:
+                    log.info(f"New minimum {value} found at {seed} count {count} with annotation {annotation}")
+                    minimum_final = value
         found_p2_answer = minimum_final
         log.info(f"{expected_p2_answer=} {found_p2_answer=}")
         assert found_p2_answer == expected_p2_answer
