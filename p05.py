@@ -19,26 +19,16 @@ class Transform:
         return src
 
 
-def generate_xform(input_lines: list, comment: str) -> Transform:
-
-    rc = Transform()
-    rc.name = name
-
-    for line in input_lines:
-        numbers = [int(x) for x in line.split(' ')]
-        assert len(numbers) == 3
-        rc.add_range(numbers[0], numbers[1], numbers[2])
-    return rc
-
-
 def parse_inp_lines(data: list):
     xforms = []
     current_xformer = None
+    seed_ranges = []
     for line in data:
         if len(line.strip()) == 0:
             continue
         if 'seeds' in line:
             seeds = [int(x) for x in line.split(':')[1].split()]
+            
         elif 'map' in line:
             current_xformer = Transform(line)
             xforms.append(current_xformer)
@@ -65,12 +55,3 @@ if __name__ == '__main__':
     parse_inp_lines(sample)
     parse_inp_lines(final)
 
-
-#     tdata = '''50 98 2
-# 52 50 48'''
-#     tname = 'seed-to-soil'
-#     tlines = tdata.split('\n')
-#     tmap = generate_xform(tlines, tname)
-#     assert tmap.lookup(50) == 52
-#     assert tmap.lookup(1) == 1
-#     assert tmap.lookup(99) == 51
