@@ -1,6 +1,15 @@
 from utils import get_data_lines, log
 
 
+class RaceSpec:
+    def __init__(self, time, distance):
+        self.RS_TIME     = time
+        self.RS_DISTANCE = distance
+
+    def __repr__(self):
+        return f"RaceSpec {self.RS_TIME=} {self.RS_DISTANCE=}"
+
+
 if __name__ == '__main__':
     # sample_data, full_data = get_data_lines(6)
     sample_data = ["Time:      7  15   30",
@@ -23,7 +32,8 @@ if __name__ == '__main__':
         
         # Now we have two integer arrays to process
         for time, distance in zip(time_array, distance_array):
-            log.info(f"Considering {time=} {distance=} ...")
+            raceSpec = RaceSpec(time, distance)
+            log.info(f"Considering {raceSpec=} ...")
         
         found_p1_answer = 0
         log.info(f"{expected_p1_answer=} {found_p1_answer=}")
