@@ -1,11 +1,12 @@
 from utils import get_data_lines, log
 
-card_strength = "AKQJT98765432"
+
 
 
 def compare_eqr_hands(a: str, b: str) -> str:
     # Compare two hands of equal rank
     # Return ">" if a wins, "<" if b wins, "=" if tie
+    card_strength = "AKQJT98765432"
     log.info(f"Comparing {a=} {b=}")
     cur_idx = 0
     while cur_idx < len(a) - 1:
@@ -83,12 +84,19 @@ test_hands = [
     {'a': '22222', 'b': '22222', 'expected': '='},
 ]
 
+
 def validate_hand_comparisons():
     for hand in test_hands:
         assert compare_hands(hand['a'], hand['b']) == hand['expected'], f"Failed {hand=} {compare_hands(hand['a'], hand['b'])=}"
 
 
 if __name__ == '__main__':
-    sample, full = get_data_lines(6)
     validate_scoring()
     validate_hand_comparisons()
+
+    sample, full = get_data_lines(7)
+    winnings = 0
+    for line in sample:
+        cards, bid = line.split()
+        winnings += (int(bid) * rank_hand(cards))
+    log.info(f"sample {winnings=}")
