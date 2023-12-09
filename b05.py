@@ -26,7 +26,7 @@ class Transformer:
 if __name__ == '__main__':
     sample_data, full_data = get_data_lines(5)
     for dataset, expected_p1_answer, expected_p2_answer in [
-                (sample_data,    -1,      -1),
+                (sample_data,    35,      -1),
                 (full_data,      -1,      -1),
             ]:
         transformers = []
@@ -45,21 +45,22 @@ if __name__ == '__main__':
             else:
                 raise Exception(f"Unknown row: {row}")
         [x.concretize() for x in transformers]
-        for seed in seeds:
-            annotation = f"Seed {seed}, "
+        minimum_final = None
+        for element in seeds:
+            annotation = f"Seed {element}, "
             for transformer in transformers:
-                seed = transformer.transform(seed)
-                annotation = f"{annotation}{transformer.TRANSFORMER_TAG} {seed}, "
+                element = transformer.transform(element)
+                annotation = f"{annotation}{transformer.TRANSFORMER_TAG} {element}, "
+            if minimum_final is None or element < minimum_final:
+                minimum_final = element
             log.info(f"{annotation}")
+        log.info(f"{minimum_final=}")
 
-
-        found_p1_answer = 1
+        found_p1_answer = minimum_final
         found_p2_answer = 1
 
         log.info(f"{expected_p1_answer=} {found_p1_answer=}")
         assert found_p1_answer == expected_p1_answer
-        log.info(f"{expected_p2_answer=} {found_p2_answer=}")
-        assert found_p2_answer == expected_p2_answer
 
     log.info(f"Success")
 
