@@ -58,7 +58,7 @@ def compare_hand_strength(hand1, hand2):
 if __name__ == '__main__':
     sample_data, full_data = get_data_lines(7)
     for dataset, expected_p1_answer, expected_p2_answer in [
-        (sample_data,      -1,      -1),
+        (sample_data,    6440,      -1),
         (full_data,        -1,      -1),
     ]:
         raw_hands = []
@@ -69,10 +69,14 @@ if __name__ == '__main__':
             raw_hands.append(hand)
 
         # Rank the hands, first by 
-        strength_sorted_hands = sorted(raw_hands, key=cmp_to_key(compare_hand_strength), reverse=False)
-        full_sorted_hands     = sorted(strength_sorted_hands, key=lambda x: x.H_CATEGORY, reverse=True)
+        strength_sorted_hands = sorted(raw_hands, key=cmp_to_key(compare_hand_strength), reverse=True)
+        full_sorted_hands     = sorted(strength_sorted_hands, key=lambda x: x.H_CATEGORY, reverse=False)
         for hand in strength_sorted_hands: log.info(f"strengthsort: {hand=}")
         for hand in full_sorted_hands:     log.info(f"fullsort: {hand=}")
+
+        winnings = 0
+        for index, hand in enumerate(full_sorted_hands):
+            winnings += hand.H_BID * (index + 1)
 
         found_p1_answer = winnings
         log.info(f"{expected_p1_answer=} {found_p1_answer=}")
