@@ -1,13 +1,10 @@
-## � 2019 Scale Invariant, Inc.  All rights reserved.
+## ©️ 2023 Scale Invariant, Inc.  All rights reserved.
 ##      Reference: https://www.termsfeed.com/blog/sample-copyright-notices/
 ##
 ## Unauthorized copying of this file, via any medium is strictly prohibited
 ## Proprietary and confidential
 ##
-## Written by Brad Hyslop <bhyslop@scaleinvariant.org> March 2019
-##
-##  Pretty version:   https://github.com/bhyslop/usi-UtilitiesScaleInvariant/blob/master/usi-project.mk
-##
+## Written by Brad Hyslop <bhyslop@scaleinvariant.org> December 2023
 
 
 include aoc23-variables.sh

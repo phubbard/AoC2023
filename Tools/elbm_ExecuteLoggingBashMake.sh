@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# � 2019 Scale Invariant, Inc.  All rights reserved.
+# ©️ 2019 Scale Invariant, Inc.  All rights reserved.
 #      Reference: https://www.termsfeed.com/blog/sample-copyright-notices/
 
 # Trigger the named executable in a bash shell while saving logs off
