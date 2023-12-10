@@ -36,7 +36,7 @@ zMBDE_OUTER_ABSDIR = $(MBC_ROOT_ABSDIR)
 # Path within container where the project directory is mounted
 zMBDE_INNER_ABSDIR = /app
 
-zDME_CONTAINER_BASEARGS =                        \
+MBDE_CONTAINER_BASEARGS =                        \
   --name $(zMBDE_SELECTED_CONTAINER_NAME)        \
   --gpus all                                     \
   --network none                                 \
@@ -55,7 +55,7 @@ mbde-B__BuildDockerImage.%.sh:
 
 mbde-i__InteractDockerContainer.%.sh:
 	$(MBC_SHOW_WHITE) "Attempt to invoke..."
-	docker run --rm  -it --init $(zDME_CONTAINER_BASEARGS)
+	docker run --rm  -it --init $(MBDE_CONTAINER_BASEARGS)
 	$(MBC_PASS) "Done, no errors."
 
 mbde-z__ZapDockerContainer.%.sh:
@@ -65,13 +65,12 @@ mbde-z__ZapDockerContainer.%.sh:
 	$(MBC_PASS) "Done, no errors."
 
 mbde-u__Uname.%.sh:
-	@docker run --rm $(zDME_CONTAINER_BASEARGS) \
+	@docker run --rm $(MBDE_CONTAINER_BASEARGS) \
 	uname -a
 
-
 # Example of running a script in a particular image
-uptime-hours.python-3p11p5.sh:
-	@docker run --rm $(zDME_CONTAINER_BASEARGS) \
+uptime-hours.python-3p12p1.sh:
+	@docker run --rm $(MBDE_CONTAINER_BASEARGS) \
 	python -c 'mins=float(open("/proc/uptime").read().split()[0])/60;h=mins//60;m=mins-h*60;print(f"uptime -> {int(h)}h{int(m)}m");'
 
 
