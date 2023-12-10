@@ -15,7 +15,7 @@ def compare_qs_style(a, b):
 def compare_eqr_hands(a: str, b: str) -> str:
     # Compare two hands of equal rank
     # Return ">" if a wins, "<" if b wins, "=" if tie
-    card_strength = "AKQJT98765432"
+    card_strength = "AKQJT98765432J"
     log.debug(f"Comparing {a=} {b=}")
     cur_idx = 0
     while cur_idx < len(a):
