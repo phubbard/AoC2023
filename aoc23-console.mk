@@ -38,7 +38,7 @@ elbm-true.sh:
 elbm-false.sh:
 	$(MBC_SHOW_RED) "false, about to error."  &&  $(MBC_FAIL)
 
-%.python-3p12p1.sh:
+%.dkrpy-3p12p1.sh:
 	@docker run --rm $(MBDE_CONTAINER_BASEARGS) \
 	python $(MBC_TTPARAM__FIRST).py
 	$(MBC_PASS) "no errors."
