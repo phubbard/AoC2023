@@ -61,14 +61,14 @@ class Pattern:
         # Create a transpose of the raw rows
         transposed = [''.join(row) for row in zip(*self.__raw_rows)]
         
-        self.PATTERN_ROW_ANALYSIS = Analysis(self.__raw_rows, 100)
-        self.PATTERN_COL_ANALYSIS = Analysis(transposed,        1)
+        self.HORIZONTAL_ANALYSIS = Analysis(self.__raw_rows, 100)
+        self.VERTICAL_ANALYSIS   = Analysis(transposed,        1)
 
         return self
     
     def pattern_score(self):
-        return sum(x.ANALYSIS_SCORE for x in (self.PATTERN_ROW_ANALYSIS,
-                                              self.PATTERN_COL_ANALYSIS))
+        return sum(x.ANALYSIS_SCORE for x in (self.HORIZONTAL_ANALYSIS,
+                                              self.VERTICAL_ANALYSIS))
 
 
     def __repr__(self):
