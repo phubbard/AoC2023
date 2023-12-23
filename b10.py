@@ -46,6 +46,22 @@ class Field:
         if len(self.__field_start.get_neighbors()) != 2:
             raise Exception("Start has wrong number of neighbors")
 
+        # Now, determine a proper rewrite of the start tile
+        needed_neigbor_ordinates = set((t.TILE_ROW, t.TILE_COL) for t in self.__field_start.get_neighbors())
+        self.__field_restart = None
+        for x in "F7JL-|" :
+            candidate = Tile(self.__field_start.TILE_ROW, self.__field_start.TILE_COL, x)
+            found_neigbor_ordinates = set(candidate.get_nonstart_neighbor_ordinates())
+            if found_neigbor_ordinates == needed_neigbor_ordinates:
+                self.__field_restart = candidate
+                break
+        if self.__field_restart is None:
+            raise Exception("Could not find a good restart tile")
+        log(f"Restart tile is {self.__field_restart} basedon {self.__field_start}")
+
+    def get_restart(self):
+        return self.__field_restart
+
     def show(self):
         log(f"Start tile at: {self.__field_start}")
         prev_tile = self.__field_start
@@ -104,6 +120,10 @@ class Tile:
 
     def get_neighbors(self):
         return tuple(self.__tile_neigbors)
+    
+    def is_neigbor(self, other):
+        if other is None: return False
+        return other in self.__tile_neigbors
 
     def __str__(self) -> str:
         return f"Tile({self.TILE_ROW=}, {self.TILE_COL=}, {self.TILE_CHAR=})"
@@ -113,7 +133,7 @@ class Tile:
 
 
 class Profile:
-    def __init__(self, max_row, max_col, tiles):
+    def __init__(self, max_row, max_col, restart_tile, tiles):
 
         # Make a 2d array sized for rows and columns
         ground = []
@@ -123,17 +143,33 @@ class Profile:
                 ground[row].append(None)
         
         # Mark location of all tiles in the ground array
-        for tile in tiles:
+        for tile in list(tiles) + [restart_tile]:
             ground[tile.TILE_ROW][tile.TILE_COL] = tile
 
         contained_cells = 0
         for row in ground:
-            is_inside = False
+            is_inside    = False
+            closure_char = None
+            visualization = ""
             for col in row:
+                marker = ' '
                 if col is None:
-                    if is_inside: contained_cells += 1
-                else:
+                    if is_inside:
+                        contained_cells += 1
+                        marker = 'X'
+                elif col.TILE_CHAR == '|':
                     is_inside = not is_inside
+                elif col.TILE_CHAR == 'F':
+                    closure_char = '7'
+                elif col.TILE_CHAR == 'L':
+                    closure_char = 'J'
+                elif col.TILE_CHAR == '-':
+                    if closure_char is None: raise Exception(f"Unexpected closure char fail")
+                elif col.TILE_CHAR != closure_char:
+                    is_inside = not is_inside
+                    closure_char = None
+                visualization += marker
+            log(f"  viz -> {visualization=}")
         self.PROFILE_CONTAINED_COUNT = contained_cells
 
 
@@ -151,15 +187,26 @@ SJ.L7
 |F--J
 LJ..."""
 
+p2_sample_data = \
+"""...........
+.S-------7.
+.|F-----7|.
+.||.....||.
+.||.....||.
+.|L-7.F-J|.
+.|..|.|..|.
+.L--J.L--J.
+..........."""
 
 if __name__ == '__main__':
 
     real_data = open("data/10.txt").read()
 
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
-                ("primal", primal_data,    4,      -1),
-                ("sample", sample_data,    8,      -1),
-                ("real",   real_data,   7097,    1729),
+                ("primal", primal_data,       4,      -1),
+                ("sample", sample_data,       8,      -1),
+                ("p2_sam", p2_sample_data,   -1,       4),
+                ("real",   real_data,      7097,    1729),
             ]:
         log(f"Considering -> {tag}")
         
@@ -174,12 +221,15 @@ if __name__ == '__main__':
         field.show()
         steps, boundary_tiles = field.find_largest_step()
         log(f"Steps: {steps=} with {expected_p1_answer=}")
-        assert steps == expected_p1_answer
+        if expected_p1_answer > -1:
+            assert steps == expected_p1_answer
+        else:
+            log(f"Skipping part one")
 
         if expected_p2_answer > -1:
             max_row, max_col = field.get_extents()
             log(f"Extents: {max_row=} {max_col=}")
-            profile = Profile(max_row, max_col, boundary_tiles)
+            profile = Profile(max_row, max_col, field.get_restart(), boundary_tiles)
             found_p2_answer = profile.PROFILE_CONTAINED_COUNT
             log(f"expected_p2_answer={expected_p2_answer} and found_p2_answer={found_p2_answer}")
             assert found_p2_answer == expected_p2_answer
