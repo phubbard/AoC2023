@@ -78,11 +78,12 @@ class Space:
 
 if __name__ == '__main__':
     sample_data, full_data = get_data_lines(11)
-    for tag, dataset, growth_factor, expected_p1_answer, expected_p2_answer in [
-                ("sample x 1",    sample_data,    2,      374,       -1),
-                ("sample x 10",   sample_data,   10,     1030,       -1),
-                ("sample x 1000", sample_data,  100,     8410,       -1),
-                ("full",          full_data,      2,  9545480,       -1),
+    for tag, dataset, growth_factor, expected_p1_answer in [
+                ("sample x 1",    sample_data,       2,           374),
+                ("sample x 10",   sample_data,      10,          1030),
+                ("sample x 1000", sample_data,     100,          8410),
+                ("full x 1",        full_data,       2,       9545480),
+                ("full x 1M",       full_data, 1000000,  406725732046),
             ]:
         
         space = Space()
@@ -105,13 +106,5 @@ if __name__ == '__main__':
             assert found_p1_answer == expected_p1_answer
         else:
             log.info(f"Skipping part one")
-
-        if expected_p2_answer > 0:
-            found_p2_answer = 3333
-            log.info(f"Starting part two...")
-            log.info(f"{found_p2_answer=} with {expected_p2_answer=}")
-            assert found_p2_answer == expected_p2_answer
-        else:
-            log.info(f"Skipping part two")
 
     log.info(f"Success")
