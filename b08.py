@@ -189,6 +189,8 @@ if __name__ == '__main__':
                 # >>>
                 # >>> lcm_of_list(numbers)
                 # 7309459565207
+                    
+                # 7 309 459 565 207
 
 
             log.info(f"{steps=} with {expected_p2_answer=}")
