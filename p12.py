@@ -1,6 +1,6 @@
 from utils import get_data_lines, log, permutations, get_data_as_lines
 import re
-from itertools import combinations_with_replacement as cwr
+from itertools import product
 
 
 def find_unknowns(dataline) -> list:
@@ -45,6 +45,19 @@ def validate_sample_data(datalines):
 def num_combinations(dataline, runlengths) -> int:
     rc = 0
     unknowns = find_unknowns(dataline)
+    total_unk_length = sum([len(x) for x in unknowns])
+    possiblities = product('.#', repeat=total_unk_length)
+    for possibility in possiblities:
+        p_str = ''.join(possibility)
+        # via https://stackoverflow.com/questions/4664850/how-to-find-all-occurrences-of-a-substring
+        unk_indices = [m.start() for m in re.finditer(r'\?', dataline)]
+        # Build a new dataline with the unknowns replaced by the possibility
+        new_dataline = list(dataline)
+        for p_idx, u_idx in enumerate(unk_indices):
+            new_dataline[u_idx] = p_str[p_idx]
+        if validate(''.join(new_dataline), runlengths):
+            rc += 1
+    return rc
 
 
 def part_one(datalines) -> int:
@@ -56,7 +69,7 @@ def part_one(datalines) -> int:
 
 
 if __name__ == '__main__':
-    log.setLevel('DEBUG')
+    log.setLevel('INFO')
 
     sample, full = get_data_lines('12')
     log.debug(sample)
@@ -66,5 +79,12 @@ if __name__ == '__main__':
 
     validate_sample_data(sample)
 
+    assert(num_combinations(sample_two[0], [1, 1, 3]) == 1)
+    map, rl = parse_dataline(sample_two[1])
+    assert(num_combinations(map, rl) == 4)
+
     sample_valid = part_one(sample)
-    log.debug(f'{part_one(sample)=} should be 21')
+    log.info(f'{part_one(sample_two)=} should be 21')
+
+    log.info(f'{part_one(full)=} should be 8180')
+    p1_answer = 8180
