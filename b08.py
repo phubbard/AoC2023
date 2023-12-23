@@ -72,7 +72,21 @@ class Journey:
     def describe_resonance(self):
         for index, node in enumerate(self.__cursor):
             log.info(f"{index=} {node.NODE_TAG_me=} {self.__baseline[index]=} {self.__delta[index]=}")
-    
+
+    def take_hop(self):
+        adjust_index = 0
+        adjust_baseline = self.__baseline[adjust_index]
+        for index, baseline in enumerate(self.__baseline):
+            if baseline < adjust_baseline:
+                adjust_index = index
+                adjust_baseline = baseline
+        new_baseline = adjust_baseline + self.__delta[adjust_index]
+        self.__baseline[adjust_index] = new_baseline
+        return new_baseline
+
+    def is_terminal(self):
+        return len(set(self.__baseline)) == 1
+
     def snapshot(self):
         return '-'.join(n.NODE_TAG_me for n in self.__cursor)
 
@@ -150,6 +164,14 @@ if __name__ == '__main__':
                 steps += 1
 
             journey.describe_resonance()
+            laps = 0
+            while not journey.is_terminal():
+                laps += 1
+                steps = journey.take_hop()
+                if laps % 1000000 == 0:
+                    log.info(f"{laps=} {steps=}")
+                    journey.describe_resonance()
+            log.info(f"{steps=} with {expected_p2_answer=}")
             assert steps == expected_p2_answer
         else:
             log.info(f"Skipping part two")
