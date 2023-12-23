@@ -41,21 +41,40 @@ class Node:
 
 class Journey:
     def __init__(self, network):
-        self.__network = network
-        self.__cursor  = [n for n in network.get_nodes() if n.NODE_TAG_me.endswith('A')]
+        self.__network  = network
+        self.__cursor   = [n for n in network.get_nodes() if n.NODE_TAG_me.endswith('A')]
+        self.__baseline = [None for c in self.__cursor]
+        self.__delta    = [0 for c in self.__cursor]
+        log.info(f"Starting journey with {len(self.__cursor)=}")
 
-    def take_step(self, direction):
+    def single_step(self, direction, steps):
         new_cursor = []
-        for node in self.__cursor:
+        for index, node in enumerate(self.__cursor):
+            if node.NODE_TAG_me.endswith('Z'):
+                baseline = self.__baseline[index]
+                if baseline is None:
+                    self.__baseline[index] = steps
+                else:
+                    delta = self.__delta[index]
+                    if delta == 0:
+                        self.__delta[index] = steps - baseline
+
             if   direction == 'L': new_cursor.append(node.NODE_LEFT)
             elif direction == 'R': new_cursor.append(node.NODE_RIGHT)
             else: raise Exception(f"Unknown direction: {direction}")
         self.__cursor = new_cursor
 
-    def is_terminal(self):
-        for node in self.__cursor:
-            if not node.NODE_TAG_me.endswith('Z'): return False
+    def is_resonating(self):
+        for delta in self.__delta:
+            if delta == 0: return False
         return True
+    
+    def describe_resonance(self):
+        for index, node in enumerate(self.__cursor):
+            log.info(f"{index=} {node.NODE_TAG_me=} {self.__baseline[index]=} {self.__delta[index]=}")
+    
+    def snapshot(self):
+        return '-'.join(n.NODE_TAG_me for n in self.__cursor)
 
 
 second_data = \
@@ -122,13 +141,15 @@ if __name__ == '__main__':
             log.info(f"Starting part two...")
             journey = Journey(network)
             steps = 0
-            while not journey.is_terminal():
-                steps += 1
+            while not journey.is_resonating():
                 direction = directions[index]
                 index = (index + 1) % len(directions)
-                journey.take_step(direction)    
+                ss = journey.snapshot()
+                if 'Z' in ss: log.info(f"{steps=} {ss=}")
+                journey.single_step(direction, steps)
+                steps += 1
 
-            log.info(f"{steps=} with {expected_p2_answer=}")
+            journey.describe_resonance()
             assert steps == expected_p2_answer
         else:
             log.info(f"Skipping part two")
