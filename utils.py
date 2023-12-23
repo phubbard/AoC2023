@@ -27,6 +27,10 @@ def clean_lines(input_lines):
     return [x.strip() for x in input_lines]
 
 
+def manhattan_distance(p1, p2):
+    return sum([abs(p1[x] - p2[x]) for x in range(len(p1))])
+
+
 def make_2d_array(num_rows, num_cols, fill=0):
     # Create and allocate a 2D array. Copypasta from SO with edits.
     return [[fill] * num_cols for _ in range(num_rows)]
