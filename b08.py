@@ -51,7 +51,7 @@ if __name__ == '__main__':
         network = Network()
         directions = None
         for line in dataset:
-            log.info(f"Considering {line=}")
+            # log.info(f"Considering {line=}")
             if directions is None:
                 directions = line
             elif len(line) > 0:
@@ -67,8 +67,8 @@ if __name__ == '__main__':
             steps += 1
             direction = directions[index]
             index = (index + 1) % len(directions)
-            log.info(f"{steps=} {direction=} {current_node.NODE_TAG_me=} {current_node.NODE_TAG_LEFT=} {current_node.NODE_TAG_RIGHT=}")
-            if direction == 'L':   current_node = current_node.NODE_LEFT
+            # log.info(f"{steps=} {direction=} {current_node.NODE_TAG_me=} {current_node.NODE_TAG_LEFT=} {current_node.NODE_TAG_RIGHT=}")
+            if   direction == 'L': current_node = current_node.NODE_LEFT
             elif direction == 'R': current_node = current_node.NODE_RIGHT
             else: raise Exception(f"Unknown direction: {direction}")
         log.info(f"{steps=} with {expected_p1_answer=}")
