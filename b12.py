@@ -28,23 +28,25 @@ class Condition:
                 unknown_indices.append(idx)
         
         # log.info(f"  {unknown_indices=}")
+        self.CONDITION_UNKNOWN_INDICES = tuple(unknown_indices)
+        self.CONDITION_SCORE           = score
+        self.CONDITION_SPRINGS         = springs
 
+
+    def generate_valid_arrangements(self):
+        unknown_indices = self.CONDITION_UNKNOWN_INDICES
         # Generate all possible arrangements
         valid_arrangements = []
         for seed in range(2 ** len(unknown_indices)):
-            arrangement_root = [c for c in springs]
+            arrangement_root = [c for c in self.CONDITION_SPRINGS]
             for idx, bit in enumerate(unknown_indices):
                 arrangement_root[bit] = OPERATIONAL_CHAR if (seed & (1 << idx)) else DAMAGED_CHAR
 
             arrangement = Arrangement(''.join(arrangement_root))
-            if arrangement.ARRANGEMENT_SCORE == score:
+            if arrangement.ARRANGEMENT_SCORE == self.CONDITION_SCORE:
                 valid_arrangements.append(arrangement)
-        self.CONDITION_ARRANGEMENTS = tuple(valid_arrangements)
+        return tuple(valid_arrangements)
 
-
-
-    def __repr__(self):
-        return f"MPOE]"
 
 presample_data = \
 """#.#.### 1,1,3
@@ -82,13 +84,14 @@ if __name__ == '__main__':
             ]:
         log.info(f"Considering -> {tag}")
 
-        arrangement_count = 0
-        for row in dataset:
-            condition = Condition(row)
-            arrangement_count += len(condition.CONDITION_ARRANGEMENTS)
-        found_p1_answer = arrangement_count
-        log.info(f"Steps: {found_p1_answer=} with {expected_p1_answer=}")
         if expected_p1_answer > -1:
+            arrangement_count = 0
+            for row in dataset:
+                condition = Condition(row)
+                valid_arrangements = condition.generate_valid_arrangements()
+                arrangement_count += len(valid_arrangements)
+            found_p1_answer = arrangement_count
+            log.info(f"Steps: {found_p1_answer=} with {expected_p1_answer=}")
             assert found_p1_answer == expected_p1_answer
         else:
             log.info(f"Skipping part one")
