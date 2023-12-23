@@ -1,6 +1,17 @@
 from utils import get_data_lines, log
 
+DOESNT_WORK
 
+sample_data = \
+"""0 3 6 9 12 15
+1 3 6 10 15 21
+10 13 16 21 30 45
+"""
+
+def predict_next_number(numbers):
+    first_number_list = numbers[:-1]
+    second_number_list = numbers[1:]
+    delta_list = [s - f for f, s in zip(first_number_list, second_number_list)]
 
 
 if __name__ == '__main__':
