@@ -171,6 +171,25 @@ if __name__ == '__main__':
                 if laps % 1000000 == 0:
                     log.info(f"{laps=} {steps=}")
                     journey.describe_resonance()
+
+                ## From long aborted run:
+                    
+                ## /app/b08.py(172): INFO laps=1455000000 steps=3687393764718
+                ## /app/b08.py(74): INFO index=0 node.NODE_TAG_me='HFP' self.__baseline[index]=3687393755096 self.__delta[index]=18961
+                ## /app/b08.py(74): INFO index=1 node.NODE_TAG_me='DQT' self.__baseline[index]=3687393757643 self.__delta[index]=12169
+                ## /app/b08.py(74): INFO index=2 node.NODE_TAG_me='PHG' self.__baseline[index]=3687393752266 self.__delta[index]=17263
+                ## /app/b08.py(74): INFO index=3 node.NODE_TAG_me='JJG' self.__baseline[index]=3687393759907 self.__delta[index]=13301
+                ## /app/b08.py(74): INFO index=4 node.NODE_TAG_me='TMG' self.__baseline[index]=3687393757360 self.__delta[index]=14999
+                ## /app/b08.py(74): INFO index=5 node.NODE_TAG_me='RFS' self.__baseline[index]=3687393764718 self.__delta[index]=16697
+                ## /app/b08.py(172): INFO laps=1456000000 steps=3689928052641
+                ## /app/b08.py(74): INFO index=0 node.NODE_TAG_me='HFP' self.__baseline[index]=3689928044434 self.__delta[index]=18961
+                ## /app/b08.py(74): INFO index=1 node.NODE_TAG_me='DQT' self.__baseline[index]=3689928049245 self.__delta[index]=12169
+                ## /app/b08.py(74): INFO index=2 node.NODE_TAG_me='PHG' self.__baseline[index]=3689928046981 self.__delta[index]=17263
+                ## /app/b08.py(74): INFO index=3 node.NODE_TAG_me='JJG' self.__baseline[index]=3689928052641 self.__delta[index]=13301
+                ## /app/b08.py(74): INFO index=4 node.NODE_TAG_me='TMG' self.__baseline[index]=3689928048396 self.__delta[index]=14999
+                ## /app/b08.py(74): INFO index=5 node.NODE_TAG_me='RFS' self.__baseline[index]=3689928052075 self.__delta[index]=16697
+
+
             log.info(f"{steps=} with {expected_p2_answer=}")
             assert steps == expected_p2_answer
         else:
