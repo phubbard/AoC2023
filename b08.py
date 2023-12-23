@@ -40,6 +40,7 @@ BBB = (AAA, ZZZ)
 ZZZ = (ZZZ, ZZZ)
 """.split('\n')
 
+
 if __name__ == '__main__':
     sample_data, full_data = get_data_lines(8)
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
