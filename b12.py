@@ -88,6 +88,7 @@ if __name__ == '__main__':
             arrangement_count = 0
             for row in dataset:
                 condition = Condition(row)
+                log.info(f"{len(condition.CONDITION_UNKNOWN_INDICES)} permutations for {condition.CONDITION_SPRINGS} {condition.CONDITION_SCORE}")
                 valid_arrangements = condition.generate_valid_arrangements()
                 arrangement_count += len(valid_arrangements)
             found_p1_answer = arrangement_count
