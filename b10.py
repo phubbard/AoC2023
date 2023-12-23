@@ -91,6 +91,8 @@ class Field:
                         candidate_tiles.add(neighbor)
             
             current_tips = candidate_tiles
+        for tile in current_tips:
+            traversed_tiles.add(tile)
         return current_step, traversed_tiles
     
     def get_extents(self):
@@ -143,15 +145,17 @@ class Profile:
                 ground[row].append(None)
         
         # Mark location of all tiles in the ground array
+        log(f"Restart tile is {restart_tile}")
         for tile in list(tiles) + [restart_tile]:
             ground[tile.TILE_ROW][tile.TILE_COL] = tile
 
         contained_cells = 0
         for row in ground:
+            visualization = ""
             is_inside    = False
             closure_char = None
-            visualization = ""
             for col in row:
+                log(f"Considering {col=}")
                 marker = ' '
                 if col is None:
                     if is_inside:
@@ -164,7 +168,7 @@ class Profile:
                 elif col.TILE_CHAR == 'L':
                     closure_char = 'J'
                 elif col.TILE_CHAR == '-':
-                    if closure_char is None: raise Exception(f"Unexpected closure char fail")
+                    pass
                 elif col.TILE_CHAR != closure_char:
                     is_inside = not is_inside
                     closure_char = None
