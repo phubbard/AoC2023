@@ -74,6 +74,7 @@ if __name__ == '__main__':
     sample_data, full_data = get_data_lines(11)
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
                 ("sample", sample_data,       374,       -1),
+                ("full",     full_data,   9545480,       -1),
             ]:
         
         space = Space()
@@ -85,17 +86,12 @@ if __name__ == '__main__':
                     space.add_space(row, column, char == '#')
             space.grow_space()
 
-            test_galaxy_5 = space.locate_galaxy(5, 1)
-            test_galaxy_9 = space.locate_galaxy(9, 4)
-
-            log.info(f"Distance from 5 to 9 is {space.get_distance(test_galaxy_5, test_galaxy_9)}")
-
             pairs = list(combinations(space.get_galaxies(), 2))
             found_p1_answer = 0
             for pair in pairs:
                 distance = space.get_distance(pair[0], pair[1])
                 found_p1_answer += distance
-                log.info(f"Distance from {pair[0]} to {pair[1]} is {space.get_distance(pair[0], pair[1])}")
+                # log.info(f"Distance from {pair[0]} to {pair[1]} is {space.get_distance(pair[0], pair[1])}")
 
             log.info(f"{found_p1_answer=} with {expected_p1_answer=}")
             assert found_p1_answer == expected_p1_answer
