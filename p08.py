@@ -1,5 +1,6 @@
-
+from math import lcm
 from utils import get_data_lines, log, get_data_as_lines
+from functools import reduce
 
 
 def parse_datafile(datalines):
@@ -27,6 +28,12 @@ def one_step(direction, nodename, tree):
         return tree[nodename][1]
 
 
+def n_steps(n, directions, nodename, tree):
+    for _ in range(n):
+        nodename = one_step(directions, nodename, tree)
+    return nodename
+
+
 def find_zzz(tree, instructions) -> int:
     steps = 0
     root = 'AAA'
@@ -35,10 +42,23 @@ def find_zzz(tree, instructions) -> int:
         steps += 1
         instruction = instructions[((steps - 1) % len(instructions))]
         root = one_step(instruction, root, tree)
-        if steps % 100000 == 0:
-            log.info(f"Step {steps} - root is {root}")
+        # if steps % 100000 == 0:
+        #     log.info(f"Step {steps} - root is {root}")
 
     log.info(f"Found ZZZ in {steps} steps")
+    return steps
+
+
+def find_z_node(start_name, tree, instructions) -> int:
+    # Given a starting node (ending in A), find the min steps to a node ending in Z.
+    steps = 0
+    root = start_name
+    while not root.endswith('Z'):
+        steps += 1
+        instruction = instructions[((steps - 1) % len(instructions))]
+        root = one_step(instruction, root, tree)
+
+    log.info(f"Found Z node {root} in {steps} steps")
     return steps
 
 
@@ -52,5 +72,19 @@ if __name__ == '__main__':
     assert find_zzz(tree, instr) == 6
 
     instr, tree = parse_datafile(full)
-    find_zzz(tree, instr)
+    assert find_zzz(tree, instr) == 13301
 
+    samp_three = get_data_as_lines(8, 's3')
+    instr, tree = parse_datafile(samp_three)
+    a_keys = [k for k in tree.keys() if k.endswith('A')]
+    log.info(f"Found {len(a_keys)} nodes ending in A")
+    log.info(a_keys)
+    t_lcm = lcm(*[find_z_node(k, tree, instr) for k in a_keys])
+    log.info(f"LCM is {t_lcm}")
+
+    instr, tree = parse_datafile(full)
+    a_keys = [k for k in tree.keys() if k.endswith('A')]
+    log.info(f"Found {len(a_keys)} nodes ending in A")
+    log.info(a_keys)
+    lengths = [find_z_node(k, tree, instr) for k in a_keys]
+    log.info(f"LCM is {lcm(*lengths)}")
