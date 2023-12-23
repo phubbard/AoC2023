@@ -19,11 +19,32 @@ class Arrangement:
 
 class Condition:
     def __init__(self, row):
-        springs, groups = row.split(' ')
+        springs, score = row.split(' ')
+        # log.info(f"Considering {springs=} with {score=}")
+
+        unknown_indices = []
+        for idx, char in enumerate(springs):
+            if char == UNKNOWN_CHAR:
+                unknown_indices.append(idx)
+        
+        # log.info(f"  {unknown_indices=}")
+
+        # Generate all possible arrangements
+        valid_arrangements = []
+        for seed in range(2 ** len(unknown_indices)):
+            arrangement_root = [c for c in springs]
+            for idx, bit in enumerate(unknown_indices):
+                arrangement_root[bit] = OPERATIONAL_CHAR if (seed & (1 << idx)) else DAMAGED_CHAR
+
+            arrangement = Arrangement(''.join(arrangement_root))
+            if arrangement.ARRANGEMENT_SCORE == score:
+                valid_arrangements.append(arrangement)
+        self.CONDITION_ARRANGEMENTS = tuple(valid_arrangements)
+
 
 
     def __repr__(self):
-        return f"C[{self.CONDITION}]"
+        return f"MPOE]"
 
 presample_data = \
 """#.#.### 1,1,3
@@ -32,6 +53,14 @@ presample_data = \
 ####.#...#... 4,1,1
 #....######..#####. 1,6,5
 .###.##....# 3,2,1""".split('\n')
+
+raw_12s2_data = \
+"""???.### 1,1,3
+.??..??...?##. 1,1,3
+?#?#?#?#?#?#?#? 1,3,1,6
+????.#...#... 4,1,1
+????.######..#####. 1,6,5
+?###???????? 3,2,1""".split('\n')
 
 
 if __name__ == '__main__':
@@ -48,13 +77,16 @@ if __name__ == '__main__':
 
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
                 ("sample", sample_data,       -1,      -1),
-                ("full",   full_data,         -1,      -1),
+                ("raw_s2", raw_12s2_data,     21,      -1),
+                ("full",   full_data,       8180,      -1),
             ]:
         log.info(f"Considering -> {tag}")
 
-        # log.info(f"{dataset=}")
-
-        found_p1_answer = 0
+        arrangement_count = 0
+        for row in dataset:
+            condition = Condition(row)
+            arrangement_count += len(condition.CONDITION_ARRANGEMENTS)
+        found_p1_answer = arrangement_count
         log.info(f"Steps: {found_p1_answer=} with {expected_p1_answer=}")
         if expected_p1_answer > -1:
             assert found_p1_answer == expected_p1_answer
