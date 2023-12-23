@@ -1,4 +1,9 @@
+
+from itertools import combinations
+
 from utils import get_data_lines, log
+
+
 
 
 class Galaxy:
@@ -6,10 +11,13 @@ class Galaxy:
         self.GALAXY_ROW    = row
         self.GALAXY_COLUMN = column
 
+    def __repr__(self):
+        return f"G[{self.GALAXY_ROW},{self.GALAXY_COLUMN}]"
+
 
 class Space:
     def __init__(self):
-        self.__space_galaxies   = []
+        self.__space_galaxies   = {} # (row, column) -> galaxy
         self.__space_rows       = {} # row number -> list of galaxies
         self.__space_columns    = {} # column number -> list of galaxies
         self.__space_max_column = 0
@@ -22,7 +30,7 @@ class Space:
         coda = []
         if isGalaxy:
             galaxy = Galaxy(row, column)
-            self.__space_galaxies.append(galaxy)
+            self.__space_galaxies[(row, column)] = galaxy
             coda.append(galaxy)
         self.__space_rows[row]       = self.__space_rows.get(row, [])       + coda
         self.__space_columns[column] = self.__space_columns.get(column, []) + coda
@@ -43,6 +51,24 @@ class Space:
         log.info(f"Now cols are {self.__space_columns.keys()}")
         log.info(f"Now rows are {self.__space_rows.keys()}")
 
+    def locate_galaxy(self, row, column):
+        return self.__space_galaxies[(row, column)]
+    
+    def __count_steps(self, keys, start, end):
+        if start == end: return 0
+        smallest = min(start, end)
+        largest  = max(start, end)
+        betwixt  = [k for k in keys if smallest < k < largest]
+        return 1 + len(betwixt)
+
+    def get_galaxies(self):
+        return self.__space_galaxies.values()
+
+    def get_distance(self, galaxy_a, galaxy_b):
+        return 0 + \
+            self.__count_steps(self.__space_rows.keys(),    galaxy_a.GALAXY_ROW,    galaxy_b.GALAXY_ROW) + \
+            self.__count_steps(self.__space_columns.keys(), galaxy_a.GALAXY_COLUMN, galaxy_b.GALAXY_COLUMN)        
+
 
 if __name__ == '__main__':
     sample_data, full_data = get_data_lines(11)
@@ -58,7 +84,19 @@ if __name__ == '__main__':
                 for column, char in enumerate(line):
                     space.add_space(row, column, char == '#')
             space.grow_space()
-            found_p1_answer = 3333
+
+            test_galaxy_5 = space.locate_galaxy(5, 1)
+            test_galaxy_9 = space.locate_galaxy(9, 4)
+
+            log.info(f"Distance from 5 to 9 is {space.get_distance(test_galaxy_5, test_galaxy_9)}")
+
+            pairs = list(combinations(space.get_galaxies(), 2))
+            found_p1_answer = 0
+            for pair in pairs:
+                distance = space.get_distance(pair[0], pair[1])
+                found_p1_answer += distance
+                log.info(f"Distance from {pair[0]} to {pair[1]} is {space.get_distance(pair[0], pair[1])}")
+
             log.info(f"{found_p1_answer=} with {expected_p1_answer=}")
             assert found_p1_answer == expected_p1_answer
         else:
