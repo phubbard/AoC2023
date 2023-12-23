@@ -20,8 +20,12 @@ class Field:
     def __init__(self):
         self.__field_tiles = {}
         self.__field_start = None
+        self.__field_max_row = 0
+        self.__field_max_col = 0
 
     def make_tile(self, row, col, char):
+        self.__field_max_row = max(self.__field_max_row, row)
+        self.__field_max_col = max(self.__field_max_col, col)
         tile = Tile(row, col, char)
         safe_dictionary_insert((row, col), tile, self.__field_tiles)
         if tile.TILE_CHAR == 'S':
@@ -71,7 +75,10 @@ class Field:
                         candidate_tiles.add(neighbor)
             
             current_tips = candidate_tiles
-        return current_step
+        return current_step, traversed_tiles
+    
+    def get_extents(self):
+        return self.__field_max_row, self.__field_max_col
 
 
 class Tile:
@@ -105,6 +112,31 @@ class Tile:
         return f"Tile({self.TILE_ROW=}, {self.TILE_COL=}, {self.TILE_CHAR=})"
 
 
+class Profile:
+    def __init__(self, max_row, max_col, tiles):
+
+        # Make a 2d array sized for rows and columns
+        ground = []
+        for row in range(max_row + 1):
+            ground.append([])
+            for col in range(max_col + 1):
+                ground[row].append(None)
+        
+        # Mark location of all tiles in the ground array
+        for tile in tiles:
+            ground[tile.TILE_ROW][tile.TILE_COL] = tile
+
+        contained_cells = 0
+        for row in ground:
+            is_inside = False
+            for col in row:
+                if col is None:
+                    if is_inside: contained_cells += 1
+                else:
+                    is_inside = not is_inside
+        self.PROFILE_CONTAINED_COUNT = contained_cells
+
+
 primal_data = \
 """.....
 .S-7.
@@ -127,7 +159,7 @@ if __name__ == '__main__':
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
                 ("primal", primal_data,    4,      -1),
                 ("sample", sample_data,    8,      -1),
-                ("real",   real_data,   7097,      -1),
+                ("real",   real_data,   7097,    1729),
             ]:
         log(f"Considering -> {tag}")
         
@@ -140,10 +172,19 @@ if __name__ == '__main__':
 
         field.crosslink()
         field.show()
-        steps = field.find_largest_step()
+        steps, boundary_tiles = field.find_largest_step()
         log(f"Steps: {steps=} with {expected_p1_answer=}")
         assert steps == expected_p1_answer
 
+        if expected_p2_answer > -1:
+            max_row, max_col = field.get_extents()
+            log(f"Extents: {max_row=} {max_col=}")
+            profile = Profile(max_row, max_col, boundary_tiles)
+            found_p2_answer = profile.PROFILE_CONTAINED_COUNT
+            log(f"expected_p2_answer={expected_p2_answer} and found_p2_answer={found_p2_answer}")
+            assert found_p2_answer == expected_p2_answer
+        else:
+            log(f"Skipping part two")
 
     log(f"Success")
 
