@@ -93,9 +93,12 @@ class Valley:
         return sum(p.pattern_score() for p in self.VALLEY_PATTERNS)
 
 if __name__ == '__main__':
+
+    sample_paul, full_data = get_data_lines('13')
+
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
                 ("sample",  sample_data,       405,      -1),
-                # (full_data,           1,      -1),
+                ("full",      full_data,     34202,      -1),
             ]:
         log.info(f"Considering -> {tag=}")
         valley = Valley(dataset)
