@@ -23,29 +23,30 @@ class Space:
         self.__space_max_column = 0
         self.__space_max_row    = 0
 
-    def add_space(self, row, column, isGalaxy):
+    def add_space(self, row, column, is_galaxy):
         self.__space_max_column = max(self.__space_max_column, column)
         self.__space_max_row    = max(self.__space_max_row,    row)
 
         coda = []
-        if isGalaxy:
+        if is_galaxy:
             galaxy = Galaxy(row, column)
             self.__space_galaxies[(row, column)] = galaxy
             coda.append(galaxy)
         self.__space_rows[row]       = self.__space_rows.get(row, [])       + coda
         self.__space_columns[column] = self.__space_columns.get(column, []) + coda
 
-    def grow_space(self):
+    def grow_space(self, growth_factor):
         delta = 0.5
+        added_count = growth_factor - 1
 
         for column in range(self.__space_max_column + 1):
             if len(self.__space_columns[column]) > 0: continue
-            self.__space_columns[column + delta] = []
+            self.__space_columns[column + delta] = added_count
         self.__space_columns = {c: self.__space_columns[c] for c in sorted(self.__space_columns.keys())}
         
         for row in range(self.__space_max_row + 1):
             if len(self.__space_rows[row]) > 0: continue
-            self.__space_rows[row + delta] = []
+            self.__space_rows[row + delta] = added_count
         self.__space_rows = {r: self.__space_rows[r] for r in sorted(self.__space_rows.keys())}
 
         log.info(f"Now cols are {self.__space_columns.keys()}")
@@ -54,27 +55,34 @@ class Space:
     def locate_galaxy(self, row, column):
         return self.__space_galaxies[(row, column)]
     
-    def __count_steps(self, keys, start, end):
+    def __count_steps(self, dictionary, start, end):
         if start == end: return 0
         smallest = min(start, end)
         largest  = max(start, end)
-        betwixt  = [k for k in keys if smallest < k < largest]
-        return 1 + len(betwixt)
+        betwixt  = [(k,v) for k,v in dictionary.items() if smallest < k < largest]
+        distance = 1
+        for k,v in betwixt:
+            if isinstance(v, list):  distance += 1
+            elif isinstance(v, int): distance += v
+            else: raise Exception(f"Unexpected type {type(v)}")
+        return distance
 
     def get_galaxies(self):
         return self.__space_galaxies.values()
 
     def get_distance(self, galaxy_a, galaxy_b):
         return 0 + \
-            self.__count_steps(self.__space_rows.keys(),    galaxy_a.GALAXY_ROW,    galaxy_b.GALAXY_ROW) + \
-            self.__count_steps(self.__space_columns.keys(), galaxy_a.GALAXY_COLUMN, galaxy_b.GALAXY_COLUMN)        
+            self.__count_steps(self.__space_rows,    galaxy_a.GALAXY_ROW,    galaxy_b.GALAXY_ROW) + \
+            self.__count_steps(self.__space_columns, galaxy_a.GALAXY_COLUMN, galaxy_b.GALAXY_COLUMN)        
 
 
 if __name__ == '__main__':
     sample_data, full_data = get_data_lines(11)
-    for tag, dataset, expected_p1_answer, expected_p2_answer in [
-                ("sample", sample_data,       374,       -1),
-                ("full",     full_data,   9545480,       -1),
+    for tag, dataset, growth_factor, expected_p1_answer, expected_p2_answer in [
+                ("sample x 1",    sample_data,    2,      374,       -1),
+                ("sample x 10",   sample_data,   10,     1030,       -1),
+                ("sample x 1000", sample_data,  100,     8410,       -1),
+                ("full",          full_data,      2,  9545480,       -1),
             ]:
         
         space = Space()
@@ -84,7 +92,7 @@ if __name__ == '__main__':
             for row, line in enumerate(dataset):
                 for column, char in enumerate(line):
                     space.add_space(row, column, char == '#')
-            space.grow_space()
+            space.grow_space(growth_factor)
 
             pairs = list(combinations(space.get_galaxies(), 2))
             found_p1_answer = 0
