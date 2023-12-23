@@ -27,6 +27,10 @@ class Node:
         self.NODE_TAG_LEFT  = tag_left
         self.NODE_TAG_RIGHT = tag_right
 
+        # if self.NODE_TAG_me.endswith('Z'):
+        #     if self.NODE_TAG_LEFT  != self.NODE_TAG_me: raise Exception(f"Invalid node: {self.NODE_TAG_me=}")
+        #     if self.NODE_TAG_RIGHT != self.NODE_TAG_me: raise Exception(f"Invalid node: {self.NODE_TAG_me=}")
+
     def crosslink_nodes(self, left, right):
         self.NODE_LEFT  = left
         self.NODE_RIGHT = right
