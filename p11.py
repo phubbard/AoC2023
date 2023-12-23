@@ -12,70 +12,79 @@ def find_galaxies(data) -> list:
     return galaxies
 
 
-def find_empty(galaxies, max_count: int, dimension: int) -> list:
+def find_empty(galaxies, max_count: int, dimension: int, increment: int = 1) -> list:
     # dim = 0 for rows, dim = 1 for cols
     empty_set = []
     for idx in range(max_count):
         if not any([x[dimension] == idx for x in galaxies]):
-            empty_set.append(idx)
+            # After we add a col, the rest of the list needs to be incremented to match.
+            empty_set.append(idx + len(empty_set) * (increment - 1))
     return empty_set
 
 
-def expand_galaxies(galaxies, matrix) -> list:
+def expand_galaxies(galaxies, matrix, increment=2) -> list:
     # As per rules, for each empty row and col, add another adjacent row or col.
     # Since we're storing (row,col) this is just addition.
-    empty_c = find_empty(galaxies, len(matrix[0]), 1)
-    empty_r = find_empty(galaxies, len(matrix), 0)
+    empty_c = find_empty(galaxies, len(matrix[0]), 1, increment=increment)
+    empty_r = find_empty(galaxies, len(matrix), 0, increment=increment)
     for col in empty_c:
         for gal in galaxies:
             if gal[1] > col:
-                gal[1] += 1
+                gal[1] += increment - 1
     for row in empty_r:
         for gal in galaxies:
             if gal[0] > row:
-                gal[0] += 1
+                gal[0] += increment - 1
 
     return galaxies
 
 
 def pairwise_distances(galaxies):
-    # Data struct is (row,col,row2,col2,distance)
     distances = []
-    for idx, gal in enumerate(galaxies):
-        for idx2, gal2 in enumerate(galaxies):
-            if idx == idx2:
-                continue
-            distances.append([gal[0], gal[1], gal2[0], gal2[1], manhattan_distance(gal, gal2)])
-    # Now we need to de-duplicate. (a,b) is the same as (b,a)
-    # We can do this by sorting the first two elements of each row.
-
-    distances = [sorted(x) for x in distances]
-    distances = sorted(distances)
-    distances = [x for x in distances if x[0] != x[2] or x[1] != x[3]]
-
+    for idx in range(len(galaxies)):
+        for idx2 in range(idx + 1, len(galaxies)):
+            distances.append(manhattan_distance(galaxies[idx], galaxies[idx2]))
     return distances
 
 
 def all_sum(galaxies) -> int:
     distances = pairwise_distances(galaxies)
-    return sum([x[4] for x in distances])
+    return sum(distances)
+
+
+def print_galaxies(galaxies):
+    for idx, gal in enumerate(galaxies):
+        log.info(f"{idx + 1} : {gal[0]},{gal[1]}")
 
 
 if __name__ == '__main__':
     sample, full = load_2d_arrays(11)
     galaxies = find_galaxies(sample)
     expanded = expand_galaxies(galaxies, sample)
-    empty_c = find_empty(expanded, len(sample[0]), 1)
-    empty_r = find_empty(expanded, len(sample), 0)
-    log.info(f"expanded {empty_c=} {empty_r=}")
 
     distance = manhattan_distance(expanded[4], expanded[8])
     assert(distance == 9)
     distance = manhattan_distance(expanded[0], expanded[6])
-    # assert(distance == 15)
+    assert(distance == 15)
     distance = manhattan_distance(expanded[2], expanded[5])
     assert(distance == 17)
     i = manhattan_distance(expanded[7], expanded[8])
     assert(i == 5)
 
-    log.info(f"sample: {all_sum(galaxies)}")
+    p1_answer = 9545480
+    p2_answer = 406725732046
+    log.info(f"sample: {all_sum(expanded)} 374")
+
+    galaxies = find_galaxies(full)
+    expanded = expand_galaxies(galaxies, full)
+    log.info(f"full: {all_sum(expanded)} {p1_answer=}")
+
+    # Part 2 test - 10x
+    galaxies = find_galaxies(sample)
+    expanded = expand_galaxies(galaxies, sample, increment=10)
+    log.info(f"sample: {all_sum(expanded)} 1030")
+    # Part 2
+    galaxies = find_galaxies(full)
+    expanded = expand_galaxies(galaxies, full, increment=1000000)
+    log.info(f"full: {all_sum(expanded)} {p2_answer=}")
+
