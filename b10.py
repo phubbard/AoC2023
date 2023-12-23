@@ -122,12 +122,12 @@ LJ..."""
 
 if __name__ == '__main__':
 
-    real_data = open("problem-10/daniel/input.txt").read()
+    real_data = open("data/10.txt").read()
 
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
                 ("primal", primal_data,    4,      -1),
                 ("sample", sample_data,    8,      -1),
-                ("real",   real_data,   6778,      -1),
+                ("real",   real_data,   7097,      -1),
             ]:
         log(f"Considering -> {tag}")
         
