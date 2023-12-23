@@ -1,4 +1,3 @@
-from itertools import permutations
 from utils import load_2d_arrays, log, manhattan_distance
 
 
