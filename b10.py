@@ -155,7 +155,7 @@ class Profile:
             is_inside    = False
             closure_char = None
             for col in row:
-                log(f"Considering {col=}")
+                # log(f"Considering {col=}")
                 marker = ' '
                 if col is None:
                     if is_inside:
@@ -173,7 +173,7 @@ class Profile:
                     is_inside = not is_inside
                     closure_char = None
                 visualization += marker
-            log(f"  viz -> {visualization=}")
+            # log(f"  viz -> {visualization=}")
         self.PROFILE_CONTAINED_COUNT = contained_cells
 
 
@@ -210,7 +210,7 @@ if __name__ == '__main__':
                 ("primal", primal_data,       4,      -1),
                 ("sample", sample_data,       8,      -1),
                 ("p2_sam", p2_sample_data,   -1,       4),
-                ("real",   real_data,      7097,    1729),
+                ("real",   real_data,      7097,     355),
             ]:
         log(f"Considering -> {tag}")
         
