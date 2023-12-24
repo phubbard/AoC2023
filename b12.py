@@ -79,6 +79,58 @@ def count_permutations(locked_variables, sum_remnant, remaining_variable_count, 
     return total
 
 
+def count_hashtags(map: list) -> int:
+    count = 0
+    while count < len(map) and map[count] == '#':
+        count += 1
+    return count
+
+TABS = '  '
+
+def p2_search(indent, condition_record: list, contiguous_group: list) -> int:
+    indent += TABS
+    # Implementing the algo by dmaltor1 in https://www.reddit.com/r/adventofcode/comments/18ghux0/2023_day_12_no_idea_how_to_start_with_this_puzzle/
+    # log.info(f'{indent}: {condition_record=} {contiguous_group=}')
+    if len(condition_record) == 0:
+        if len(contiguous_group) > 0:
+            return 0
+        else:
+            return 1
+    ##else:
+    ##    if len(contiguous_group) == 0:
+    ##        return 0
+
+    if condition_record[0] == '.':
+        return p2_search(indent, condition_record[1:], contiguous_group)
+
+    if condition_record[0] == '?':
+        left_map = condition_record.copy()
+        left_map[0] = '.'
+        right_map = condition_record.copy()
+        right_map[0] = '#'
+        return p2_search(indent, left_map, contiguous_group) + \
+               p2_search(indent, right_map, contiguous_group)
+
+    if condition_record[0] == '#':
+        # find the length of the run of # characters
+        if len(contiguous_group) == 0:  ## BRAD ADDED
+            return 0                    ## BRAD ADDED
+        count = count_hashtags(condition_record)
+        if count < contiguous_group[0]:
+            new_runlength = contiguous_group[0] - count
+            return p2_search(indent, condition_record[count:], [new_runlength] + contiguous_group[1:])  
+        elif count == contiguous_group[0]:
+            new_condition_record = condition_record[count:]
+            if len(new_condition_record) > 0:
+                new_condition_record[0] = '.'
+            return p2_search(indent, new_condition_record, contiguous_group[1:])
+        else:
+            return 0
+        
+    raise Exception("Should not get here")
+
+
+
 if __name__ == '__main__':
 
     def __presample_check():
@@ -102,6 +154,16 @@ if __name__ == '__main__':
             log.info(f"{curr_time - prev_time}: Permutation study for {N=} {c=} is {total}")
             prev_time = curr_time
     __permutation_study()
+
+    def __paul_impl_study():
+        for row in raw_12s2_data:
+            cr_string, cg_string = row.split(' ')
+            condition_record = [c for c in cr_string]
+            contiguous_group = [int(c) for c in cg_string.split(',')]
+            log.info(f"Considering -> {row} {condition_record=} {contiguous_group=}")
+            result = p2_search('', condition_record, contiguous_group)
+            log.info(f"  {result=}")
+    __paul_impl_study()
 
     raise Exception("Done for now")
 
