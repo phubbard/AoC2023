@@ -85,12 +85,12 @@ def count_hashtags(map: list) -> int:
         count += 1
     return count
 
-TABS = '  '
+TABS = ' '
 
 def p2_search(indent, condition_record: list, contiguous_group: list) -> int:
     indent += TABS
     # Implementing the algo by dmaltor1 in https://www.reddit.com/r/adventofcode/comments/18ghux0/2023_day_12_no_idea_how_to_start_with_this_puzzle/
-    log.info(f'{len(indent)}: {indent}: {condition_record=} {contiguous_group=}')
+    log.info(f'{len(indent)}: {indent}: {''.join(condition_record)} {contiguous_group=}')
     if len(condition_record) == 0:
         if len(contiguous_group) > 0:
             return 0
@@ -124,8 +124,11 @@ def p2_search(indent, condition_record: list, contiguous_group: list) -> int:
         new_condition_record = condition_record[must_consume_count:]
         new_contiguous_group = contiguous_group[1:]
 
-        if len(new_condition_record) > 0 and new_condition_record[0] == '#':
-            return 0
+        if len(new_condition_record) > 0:
+            if new_condition_record[0] == '#':
+                return 0
+            new_condition_record[0] = '.'
+            log.info(f'{len(indent)}: {indent}: about to consider {new_condition_record=}')
         return p2_search(indent, new_condition_record, new_contiguous_group)
         
     raise Exception("Should not get here")
