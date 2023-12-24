@@ -112,13 +112,12 @@ def part_two(datalines) -> int:
 def p2_search(map: list, runlengths: list) -> int:
     # Implementing the algo by dmaltor1 in https://www.reddit.com/r/adventofcode/comments/18ghux0/2023_day_12_no_idea_how_to_start_with_this_puzzle/
     log.debug(f'{map=} {runlengths=}')
-    if not map:
-        if runlengths:
+    if len(map) == 0:
+        if len(runlengths) > 0:
             return 0
         else:
+            log.debug('Found a match')
             return 1
-    if not runlengths:
-        return 1
 
     if map[0] == '.':
         return p2_search(map[1:], runlengths)
@@ -131,9 +130,13 @@ def p2_search(map: list, runlengths: list) -> int:
         return p2_search(left_map, runlengths) + p2_search(right_map, runlengths)
 
     if map[0] == '#':
+        if len(runlengths) == 0:
+            return 0
         # find the length of the run of # characters
-        dvec = find_damaged(str(map))
-        count = len(dvec[0])
+        count = 0
+        while count < len(map) and map[count] == '#':
+            count += 1
+
         if count == runlengths[0]:
             return p2_search(map[count:], runlengths[1:])
         else:
