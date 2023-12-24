@@ -170,10 +170,9 @@ if __name__ == '__main__':
 
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
                 ("sample", sample_data,       -1,      -1),
-                ("raw_s2", raw_12s2_data,     21,      -1),
+                ("raw_s2", raw_12s2_data,     21,      1),
                 ("full",   full_data,       8180,      -1),
             ]:
-        log.info(f"Considering -> {tag}")
 
         if expected_p1_answer > -1:
             arrangement_count = 0
@@ -194,7 +193,26 @@ if __name__ == '__main__':
         found_p2_answer = 0
         log.info(f"Steps: {found_p2_answer=} with {expected_p2_answer=}")
         if expected_p2_answer > -1:
+            prev_time = time.time()
+            arrangement_count = 0
+            for row in dataset:
+                cr_string, cg_string = row.split(' ')
+
+                cr_string = '?'.join(cr_string * 5)
+                cg_string = ','.join([cg_string] * 5)
+
+                condition_record = [c for c in cr_string]
+                contiguous_group = [int(c) for c in cg_string.split(',')]
+                curr_time = time.time()
+
+                log.info(f"Considering -> {row} {condition_record=} {contiguous_group=}")
+                permutations = p2_search('', condition_record, contiguous_group)
+                log.info(f"{curr_time - prev_time}:  found {permutations} permutations for {row}")
+                arrangement_count += permutations
+                prev_time = curr_time
+
             assert found_p2_answer == expected_p2_answer
+            log.info(f"Steps: {found_p2_answer=} with {expected_p2_answer=}")
         else:
             log.info(f"Skipping part two")
 
