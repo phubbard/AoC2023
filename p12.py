@@ -1,5 +1,6 @@
 from utils import get_data_lines, log, permutations, get_data_as_lines
 import re
+from functools import lru_cache
 from itertools import product
 from multiprocessing import Pool, cpu_count
 
@@ -11,7 +12,7 @@ def find_unknowns(dataline) -> list:
 
 def find_damaged(dataline) -> list:
     # Find the damaged parts of a dataline
-    return re.findall(r'(\#+)', dataline)
+    return re.findall(r'(#+)', dataline)
 
 
 def validate(dataline, runlength) -> bool:
@@ -107,6 +108,46 @@ def part_two(datalines) -> int:
     return sum(results)
 
 
+def count_hashtags(map: list) -> int:
+    count = 0
+    while map[count] == '#':
+        count += 1
+    return count
+
+
+# @lru_cache(maxsize=None)
+def p2_search(map: list, runlengths: list) -> int:
+    # Implementing the algo by dmaltor1 in https://www.reddit.com/r/adventofcode/comments/18ghux0/2023_day_12_no_idea_how_to_start_with_this_puzzle/
+    log.debug(f'{map=} {runlengths=}')
+    if not map:
+        if len(runlengths) > 0:
+            return 0
+        else:
+            return 1
+    else:
+        if len(runlengths) == 0:
+            return 0
+
+    if map[0] == '.':
+        return p2_search(map[1:], runlengths)
+
+    if map[0] == '?':
+        left_map = map.copy()
+        left_map[0] = '.'
+        right_map = map.copy()
+        right_map[0] = '#'
+        return p2_search(left_map, runlengths) + p2_search(right_map, runlengths)
+
+    if map[0] == '#':
+        # find the length of the run of # characters
+        count = count_hashtags(map)
+        if count == runlengths[0]:
+            return p2_search(map[count:], runlengths[1:])
+        else:
+            # May be wrong logic here
+            return 0
+
+
 if __name__ == '__main__':
     log.setLevel('DEBUG')
 
@@ -133,5 +174,13 @@ if __name__ == '__main__':
     ref = '???.###????.###????.###????.###????.### 1,1,3,1,1,3,1,1,3,1,1,3,1,1,3'
     ans = ptwo_expand(inp)
     assert(ptwo_expand(inp) == ref)
+    test_dataline = '?###???????? 3,2,1'
+    test_exp = ptwo_expand(test_dataline)
+    tmap, rll = parse_dataline(test_exp)
+    test_ans = 506250
+    t_list = list(tmap)
+    log.info(p2_search(t_list, rll))
+    # log.info(f'{=} should be {test_ans}')
 
-    log.info(f'{part_two(sample_two)=} should be 525152')
+
+    # log.info(f'{part_two(sample_two)=} should be 525152')
