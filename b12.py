@@ -88,14 +88,14 @@ def count_hashtags(map: list) -> int:
 TABS = ' '
 
 def p2_search(indent, condition_record: list, contiguous_group: list) -> int:
-    indent += TABS
+    if indent: indent += TABS
     # Implementing the algo by dmaltor1 in https://www.reddit.com/r/adventofcode/comments/18ghux0/2023_day_12_no_idea_how_to_start_with_this_puzzle/
-    log.info(f'{len(indent)}: {indent}: {''.join(condition_record)} {contiguous_group=}')
+    # log.info(f'{len(indent)}: {indent}: {''.join(condition_record)} {contiguous_group=}')
     if len(condition_record) == 0:
         if len(contiguous_group) > 0:
             return 0
         else:
-            log.info(f'{len(indent)}: {indent}: FOUND!')
+            # log.info(f'{len(indent)}: {indent}: FOUND!')
             return 1
 
     if condition_record[0] == '.':
@@ -128,11 +128,8 @@ def p2_search(indent, condition_record: list, contiguous_group: list) -> int:
             if new_condition_record[0] == '#':
                 return 0
             new_condition_record[0] = '.'
-            log.info(f'{len(indent)}: {indent}: about to consider {new_condition_record=}')
+            # log.info(f'{len(indent)}: {indent}: about to consider {new_condition_record=}')
         return p2_search(indent, new_condition_record, new_contiguous_group)
-        
-    raise Exception("Should not get here")
-
 
 
 if __name__ == '__main__':
@@ -169,8 +166,6 @@ if __name__ == '__main__':
             log.info(f"  {result=}")
     __paul_impl_study()
 
-    raise Exception("Done for now")
-
     sample_data, full_data = get_data_lines('12')
 
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
@@ -183,10 +178,13 @@ if __name__ == '__main__':
         if expected_p1_answer > -1:
             arrangement_count = 0
             for row in dataset:
-                condition = Condition(row)
-                log.info(f"{len(condition.CONDITION_UNKNOWN_INDICES)} permutations for {condition.CONDITION_SPRINGS} {condition.CONDITION_SCORE}")
-                valid_arrangements = condition.generate_valid_arrangements()
-                arrangement_count += len(valid_arrangements)
+
+                cr_string, cg_string = row.split(' ')
+                condition_record = [c for c in cr_string]
+                contiguous_group = [int(c) for c in cg_string.split(',')]
+                log.info(f"Considering -> {row} {condition_record=} {contiguous_group=}")
+                arrangement_count += p2_search('', condition_record, contiguous_group)
+
             found_p1_answer = arrangement_count
             log.info(f"Steps: {found_p1_answer=} with {expected_p1_answer=}")
             assert found_p1_answer == expected_p1_answer
