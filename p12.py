@@ -1,6 +1,7 @@
 from utils import get_data_lines, log, permutations, get_data_as_lines
 import re
 from itertools import product
+from multiprocessing import Pool, cpu_count
 
 
 def find_unknowns(dataline) -> list:
@@ -37,8 +38,8 @@ def validate_sample_data(datalines):
     for dataline in datalines:
         map, runlengths = parse_dataline(dataline)
         log.debug(f'Validating {map} against {runlengths}')
-        log.debug(f'Unknowns: {find_unknowns(map)}')
-        log.debug(f'Damaged: {find_damaged(map)}')
+        # log.debug(f'Unknowns: {find_unknowns(map)}')
+        # log.debug(f'Damaged: {find_damaged(map)}')
         log.debug(f'Valid: {validate(map, runlengths)}')
 
 
@@ -60,16 +61,55 @@ def num_combinations(dataline, runlengths) -> int:
     return rc
 
 
+def p1_worker(dataline) -> int:
+    map, runlengths = parse_dataline(dataline)
+    return num_combinations(map, runlengths)
+
+
+def p1_mp(datalines) -> int:
+    # Multiprocessing version of part one
+    pool = Pool()
+    log.info(f'{cpu_count()=}')
+    results = pool.map(p1_worker, datalines)
+    return sum(results)
+
+
 def part_one(datalines) -> int:
-    sum = 0
+    total_sum = 0
     for dataline in datalines:
         map, runlengths = parse_dataline(dataline)
-        sum += num_combinations(map, runlengths)
-    return sum
+        total_sum += num_combinations(map, runlengths)
+    return total_sum
+
+
+def ptwo_expand(rawline):
+    # Easier to re-parse the line than to try to expand it
+    tokens = rawline.split(' ')
+    left = (tokens[0] + '?') * 5
+    left = left[:-1]
+    right = (tokens[1] + ',') * 5
+    right = right[:-1]
+    return f'{left} {right}'
+
+
+def p2_worker(dataline):
+    log.info(f'Processing {dataline}')
+    expanded = ptwo_expand(dataline)
+    map, runlengths = parse_dataline(expanded)
+    log.info(f'Processing combinations for {map} against {runlengths}')
+    return num_combinations(map, runlengths)
+
+
+def part_two(datalines) -> int:
+    pool = Pool()
+    log.info(f'part two {cpu_count()=}')
+    results = pool.map(p2_worker, datalines)
+    log.info(f'{sum(results)=}')
+    return sum(results)
 
 
 if __name__ == '__main__':
-    log.setLevel('INFO')
+    log.setLevel('DEBUG')
 
     sample, full = get_data_lines('12')
     log.debug(sample)
@@ -84,7 +124,15 @@ if __name__ == '__main__':
     assert(num_combinations(map, rl) == 4)
 
     sample_valid = part_one(sample)
-    log.info(f'{part_one(sample_two)=} should be 21')
+    log.info(f'{p1_mp(sample_two)=} should be 21')
 
-    log.info(f'{part_one(full)=} should be 8180')
+    # log.info(f'{part_one(full)=} should be 8180')
+    # log.info(f'{p1_mp(full)=} should be 8180')
+
     p1_answer = 8180
+    inp= '???.### 1,1,3'
+    ref = '???.###????.###????.###????.###????.### 1,1,3,1,1,3,1,1,3,1,1,3,1,1,3'
+    ans = ptwo_expand(inp)
+    assert(ptwo_expand(inp) == ref)
+
+    log.info(f'{part_two(sample_two)=} should be 525152')
