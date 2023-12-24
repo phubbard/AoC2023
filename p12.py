@@ -108,25 +108,17 @@ def part_two(datalines) -> int:
     return sum(results)
 
 
-def count_hashtags(map: list) -> int:
-    count = 0
-    while map[count] == '#':
-        count += 1
-    return count
-
-
 # @lru_cache(maxsize=None)
 def p2_search(map: list, runlengths: list) -> int:
     # Implementing the algo by dmaltor1 in https://www.reddit.com/r/adventofcode/comments/18ghux0/2023_day_12_no_idea_how_to_start_with_this_puzzle/
     log.debug(f'{map=} {runlengths=}')
     if not map:
-        if len(runlengths) > 0:
+        if runlengths:
             return 0
         else:
             return 1
-    else:
-        if len(runlengths) == 0:
-            return 0
+    if not runlengths:
+        return 1
 
     if map[0] == '.':
         return p2_search(map[1:], runlengths)
@@ -140,7 +132,8 @@ def p2_search(map: list, runlengths: list) -> int:
 
     if map[0] == '#':
         # find the length of the run of # characters
-        count = count_hashtags(map)
+        dvec = find_damaged(str(map))
+        count = len(dvec[0])
         if count == runlengths[0]:
             return p2_search(map[count:], runlengths[1:])
         else:
@@ -170,17 +163,15 @@ if __name__ == '__main__':
     # log.info(f'{p1_mp(full)=} should be 8180')
 
     p1_answer = 8180
-    inp= '???.### 1,1,3'
+    inp= '???.### 1,1,3'  # one answer
     ref = '???.###????.###????.###????.###????.### 1,1,3,1,1,3,1,1,3,1,1,3,1,1,3'
     ans = ptwo_expand(inp)
     assert(ptwo_expand(inp) == ref)
     test_dataline = '?###???????? 3,2,1'
     test_exp = ptwo_expand(test_dataline)
-    tmap, rll = parse_dataline(test_exp)
+    tmap, rll = parse_dataline(inp)
     test_ans = 506250
     t_list = list(tmap)
     log.info(p2_search(t_list, rll))
     # log.info(f'{=} should be {test_ans}')
-
-
     # log.info(f'{part_two(sample_two)=} should be 525152')
