@@ -2,15 +2,56 @@ from utils import get_data_lines, log
 
 import time
 
+class Generator:
+    def __init__(self, rows, filename):
+        self.__workflows = {}
+        self.__partargs  = []
+
+        for row in rows:
+            if len(row) == 0: continue
+            if row.startswith('{'):
+                parameters = row[1:-1]
+                self.__partargs.append(row[1:-1])
+            else:
+                workflow_name, procedure = row.split('{')
+                steps = []
+                for step_text in procedure.removesuffix('}').split(','):
+                    if ':' in step_text:
+                        condition, next = step_text.split(':')
+                    else:
+                        condition, next = None, step_text
+                    steps.append((condition, next))
+                self.__workflows[workflow_name] = steps
+        
+        lines = []
+        lines +=                [f'parts = [']
+        for partarg in self.__partargs:
+            lines +=            [f'    Part({partarg}),']
+        lines +=                [f']']
+        lines +=                [f'']
+        for name, steps in self.__workflows.items():
+            lines +=            [f'def op_{name}(part):']
+            for condition, next in steps:
+                if condition is None:
+                    lines +=    [f'    return op_{next}(part)']
+                else:
+                    lines +=    [f'    if part.{condition}: return op_{next}(part)']
+            lines +=            [f'']
+
+        with open(filename, 'w') as f:
+            f.write('\n'.join(lines))
+
+
 if __name__ == '__main__':
 
     sample_data, full_data = get_data_lines('19')
 
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
-                ("sample", sample_data,       -1,               -1),
-                # ("raw_s2", raw_12s2_data,     21,           525152),
-                # ("full",   full_data,       8180,  620189727003627),
+                ("b19_sample.py", sample_data,       -1,               -1),
+                ("b19_full.py",     full_data,       -1,               -1),
             ]:
+        
+        generator = Generator(dataset, tag)
 
         if expected_p1_answer > -1:
             arrangement_count = 0
