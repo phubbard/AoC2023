@@ -61,3 +61,12 @@ N-1, 1
 ```
 
 Clearly N-1.
+
+### Results of experimenting with permutation generator
+
+Oh my this isn't converging well.
+I made a recursive function to generate all permutations with timing each loop, but that started exploding long before getting to size 120.
+
+That had me wondering if I ought to be generating the combinations then permuting them, which has led to the insight for my evil problem that I'll need to permute 6*5 groups which is `30!` which is 10^33 ish. 
+
+Fail!
