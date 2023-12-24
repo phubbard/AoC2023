@@ -36,3 +36,28 @@ To generate a sequence, all we need to do is select numbers larger than zero for
 Once we have a programmatic way to generate these, I suspect it will be very easy to then use the **condition record** to filter that set.
 
 ?
+
+## More thoughts...
+
+The size of some of the upcoming permutations has me very loathe to attempt to build out the permutations in memory in advance: other AoC problems have died here.
+
+It could be interesting to try and use the Python generator concept recursively to do this, but I'm a little loathe to go too far here in case I need to go to a metal approach like C or Cuda.
+
+So how can I simply number these permutations?
+Let me try recursive from small.
+
+### If only 2 variables
+
+Lets say I have 2 variables and the target sum is `N`.
+
+The sets are:
+```
+1, N-1
+2, N-2
+3, N-3
+...
+N-2, 2
+N-1, 1
+```
+
+Clearly N-1.

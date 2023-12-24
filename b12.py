@@ -1,5 +1,6 @@
 from utils import get_data_lines, log
 
+import time
 
 OPERATIONAL_CHAR = '.'
 DAMAGED_CHAR     = '#'
@@ -65,6 +66,19 @@ raw_12s2_data = \
 ?###???????? 3,2,1""".split('\n')
 
 
+def count_permutations(locked_variables, sum_remnant, remaining_variable_count, debug):
+    if remaining_variable_count == 1:
+        if debug:
+            permutation = locked_variables + (sum_remnant,)
+            log.info(f"  {permutation}")
+        return 1
+    total = 0
+    for i in range(sum_remnant - 1):
+        value = i + 1
+        total += count_permutations(locked_variables + (value,), sum_remnant - value, remaining_variable_count - 1, debug)
+    return total
+
+
 if __name__ == '__main__':
 
     def __presample_check():
@@ -74,6 +88,22 @@ if __name__ == '__main__':
             log.info(f"expecting {expected_score} to be {arrangement.ARRANGEMENT_SCORE}")
             assert arrangement.ARRANGEMENT_SCORE == expected_score
     __presample_check()
+
+    def __permutation_study():
+        N, c = 10, 5
+        total = count_permutations((), N, c, True)
+        log.info(f"Permutation study for {N=} {c=} is {total}")
+        prev_time = time.time()
+        c = 6
+        # ?#?????????????????? 2,1,1,2,7,1
+        for N in range(10, 40):
+            total = count_permutations((), N, c, False)
+            curr_time = time.time()
+            log.info(f"{curr_time - prev_time}: Permutation study for {N=} {c=} is {total}")
+            prev_time = curr_time
+    __permutation_study()
+
+    raise Exception("Done for now")
 
     sample_data, full_data = get_data_lines('12')
 
