@@ -1,4 +1,5 @@
 
+import csv
 import inspect
 import os
 
@@ -150,17 +151,22 @@ class Profile:
             ground[tile.TILE_ROW][tile.TILE_COL] = tile
 
         contained_cells = 0
+        csv_rows = []
         for row in ground:
+            next_csv_row = []
+            csv_rows.append(next_csv_row)
             visualization = ""
             is_inside    = False
             closure_char = None
             for col in row:
                 # log(f"Considering {col=}")
                 marker = ' '
+                csv_cell = 0
                 if col is None:
                     if is_inside:
                         contained_cells += 1
                         marker = 'X'
+                        csv_cell = 1
                 elif col.TILE_CHAR == '|':
                     is_inside = not is_inside
                 elif col.TILE_CHAR == 'F':
@@ -173,8 +179,10 @@ class Profile:
                     is_inside = not is_inside
                     closure_char = None
                 visualization += marker
+                next_csv_row.append(csv_cell)
             # log(f"  viz -> {visualization=}")
         self.PROFILE_CONTAINED_COUNT = contained_cells
+        self.PROFILE_CSV_ROWS        = csv_rows
 
 
 primal_data = \
@@ -235,6 +243,10 @@ if __name__ == '__main__':
             log(f"Extents: {max_row=} {max_col=}")
             profile = Profile(max_row, max_col, field.get_restart(), boundary_tiles)
             found_p2_answer = profile.PROFILE_CONTAINED_COUNT
+            with open(f"b10-part2-locations--{tag}.csv", 'w', newline='') as csvfile:
+                csvwriter = csv.writer(csvfile)
+                for row in profile.PROFILE_CSV_ROWS:
+                    csvwriter.writerow(row)
             log(f"expected_p2_answer={expected_p2_answer} and found_p2_answer={found_p2_answer}")
             assert found_p2_answer == expected_p2_answer
         else:
