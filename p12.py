@@ -34,7 +34,6 @@ def parse_dataline(dataline) -> tuple:
 
 
 def validate_sample_data(datalines):
-    # Validate the sample data
     for dataline in datalines:
         map, runlengths = parse_dataline(dataline)
         log.debug(f'Validating {map} against {runlengths}')
