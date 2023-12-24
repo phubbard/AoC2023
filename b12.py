@@ -90,15 +90,13 @@ TABS = '  '
 def p2_search(indent, condition_record: list, contiguous_group: list) -> int:
     indent += TABS
     # Implementing the algo by dmaltor1 in https://www.reddit.com/r/adventofcode/comments/18ghux0/2023_day_12_no_idea_how_to_start_with_this_puzzle/
-    # log.info(f'{indent}: {condition_record=} {contiguous_group=}')
+    log.info(f'{len(indent)}: {indent}: {condition_record=} {contiguous_group=}')
     if len(condition_record) == 0:
         if len(contiguous_group) > 0:
             return 0
         else:
+            log.info(f'{len(indent)}: {indent}: FOUND!')
             return 1
-    ##else:
-    ##    if len(contiguous_group) == 0:
-    ##        return 0
 
     if condition_record[0] == '.':
         return p2_search(indent, condition_record[1:], contiguous_group)
@@ -113,19 +111,22 @@ def p2_search(indent, condition_record: list, contiguous_group: list) -> int:
 
     if condition_record[0] == '#':
         # find the length of the run of # characters
-        if len(contiguous_group) == 0:  ## BRAD ADDED
-            return 0                    ## BRAD ADDED
-        count = count_hashtags(condition_record)
-        if count < contiguous_group[0]:
-            new_runlength = contiguous_group[0] - count
-            return p2_search(indent, condition_record[count:], [new_runlength] + contiguous_group[1:])  
-        elif count == contiguous_group[0]:
-            new_condition_record = condition_record[count:]
-            if len(new_condition_record) > 0:
-                new_condition_record[0] = '.'
-            return p2_search(indent, new_condition_record, contiguous_group[1:])
-        else:
+        if len(contiguous_group) == 0:
             return 0
+        must_consume_count = contiguous_group[0]
+        if must_consume_count > len(condition_record):
+            return 0
+        
+        for i in range(must_consume_count):
+            if condition_record[i] == '.':
+                return 0
+            
+        new_condition_record = condition_record[must_consume_count:]
+        new_contiguous_group = contiguous_group[1:]
+
+        if len(new_condition_record) > 0 and new_condition_record[0] == '#':
+            return 0
+        return p2_search(indent, new_condition_record, new_contiguous_group)
         
     raise Exception("Should not get here")
 
@@ -156,7 +157,7 @@ if __name__ == '__main__':
     __permutation_study()
 
     def __paul_impl_study():
-        for row in raw_12s2_data:
+        for row in ['?###???????? 3,2,1']:
             cr_string, cg_string = row.split(' ')
             condition_record = [c for c in cr_string]
             contiguous_group = [int(c) for c in cg_string.split(',')]

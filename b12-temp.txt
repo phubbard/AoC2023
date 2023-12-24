@@ -1,0 +1,279 @@
+/app/b12.py(138): INFO expecting 1,1,3 to be 1,1,3
+/app/b12.py(138): INFO expecting 1,1,3 to be 1,1,3
+/app/b12.py(138): INFO expecting 1,3,1,6 to be 1,3,1,6
+/app/b12.py(138): INFO expecting 4,1,1 to be 4,1,1
+/app/b12.py(138): INFO expecting 1,6,5 to be 1,6,5
+/app/b12.py(138): INFO expecting 3,2,1 to be 3,2,1
+/app/b12.py(73): INFO   (1, 1, 1, 1, 6)
+/app/b12.py(73): INFO   (1, 1, 1, 2, 5)
+/app/b12.py(73): INFO   (1, 1, 1, 3, 4)
+/app/b12.py(73): INFO   (1, 1, 1, 4, 3)
+/app/b12.py(73): INFO   (1, 1, 1, 5, 2)
+/app/b12.py(73): INFO   (1, 1, 1, 6, 1)
+/app/b12.py(73): INFO   (1, 1, 2, 1, 5)
+/app/b12.py(73): INFO   (1, 1, 2, 2, 4)
+/app/b12.py(73): INFO   (1, 1, 2, 3, 3)
+/app/b12.py(73): INFO   (1, 1, 2, 4, 2)
+/app/b12.py(73): INFO   (1, 1, 2, 5, 1)
+/app/b12.py(73): INFO   (1, 1, 3, 1, 4)
+/app/b12.py(73): INFO   (1, 1, 3, 2, 3)
+/app/b12.py(73): INFO   (1, 1, 3, 3, 2)
+/app/b12.py(73): INFO   (1, 1, 3, 4, 1)
+/app/b12.py(73): INFO   (1, 1, 4, 1, 3)
+/app/b12.py(73): INFO   (1, 1, 4, 2, 2)
+/app/b12.py(73): INFO   (1, 1, 4, 3, 1)
+/app/b12.py(73): INFO   (1, 1, 5, 1, 2)
+/app/b12.py(73): INFO   (1, 1, 5, 2, 1)
+/app/b12.py(73): INFO   (1, 1, 6, 1, 1)
+/app/b12.py(73): INFO   (1, 2, 1, 1, 5)
+/app/b12.py(73): INFO   (1, 2, 1, 2, 4)
+/app/b12.py(73): INFO   (1, 2, 1, 3, 3)
+/app/b12.py(73): INFO   (1, 2, 1, 4, 2)
+/app/b12.py(73): INFO   (1, 2, 1, 5, 1)
+/app/b12.py(73): INFO   (1, 2, 2, 1, 4)
+/app/b12.py(73): INFO   (1, 2, 2, 2, 3)
+/app/b12.py(73): INFO   (1, 2, 2, 3, 2)
+/app/b12.py(73): INFO   (1, 2, 2, 4, 1)
+/app/b12.py(73): INFO   (1, 2, 3, 1, 3)
+/app/b12.py(73): INFO   (1, 2, 3, 2, 2)
+/app/b12.py(73): INFO   (1, 2, 3, 3, 1)
+/app/b12.py(73): INFO   (1, 2, 4, 1, 2)
+/app/b12.py(73): INFO   (1, 2, 4, 2, 1)
+/app/b12.py(73): INFO   (1, 2, 5, 1, 1)
+/app/b12.py(73): INFO   (1, 3, 1, 1, 4)
+/app/b12.py(73): INFO   (1, 3, 1, 2, 3)
+/app/b12.py(73): INFO   (1, 3, 1, 3, 2)
+/app/b12.py(73): INFO   (1, 3, 1, 4, 1)
+/app/b12.py(73): INFO   (1, 3, 2, 1, 3)
+/app/b12.py(73): INFO   (1, 3, 2, 2, 2)
+/app/b12.py(73): INFO   (1, 3, 2, 3, 1)
+/app/b12.py(73): INFO   (1, 3, 3, 1, 2)
+/app/b12.py(73): INFO   (1, 3, 3, 2, 1)
+/app/b12.py(73): INFO   (1, 3, 4, 1, 1)
+/app/b12.py(73): INFO   (1, 4, 1, 1, 3)
+/app/b12.py(73): INFO   (1, 4, 1, 2, 2)
+/app/b12.py(73): INFO   (1, 4, 1, 3, 1)
+/app/b12.py(73): INFO   (1, 4, 2, 1, 2)
+/app/b12.py(73): INFO   (1, 4, 2, 2, 1)
+/app/b12.py(73): INFO   (1, 4, 3, 1, 1)
+/app/b12.py(73): INFO   (1, 5, 1, 1, 2)
+/app/b12.py(73): INFO   (1, 5, 1, 2, 1)
+/app/b12.py(73): INFO   (1, 5, 2, 1, 1)
+/app/b12.py(73): INFO   (1, 6, 1, 1, 1)
+/app/b12.py(73): INFO   (2, 1, 1, 1, 5)
+/app/b12.py(73): INFO   (2, 1, 1, 2, 4)
+/app/b12.py(73): INFO   (2, 1, 1, 3, 3)
+/app/b12.py(73): INFO   (2, 1, 1, 4, 2)
+/app/b12.py(73): INFO   (2, 1, 1, 5, 1)
+/app/b12.py(73): INFO   (2, 1, 2, 1, 4)
+/app/b12.py(73): INFO   (2, 1, 2, 2, 3)
+/app/b12.py(73): INFO   (2, 1, 2, 3, 2)
+/app/b12.py(73): INFO   (2, 1, 2, 4, 1)
+/app/b12.py(73): INFO   (2, 1, 3, 1, 3)
+/app/b12.py(73): INFO   (2, 1, 3, 2, 2)
+/app/b12.py(73): INFO   (2, 1, 3, 3, 1)
+/app/b12.py(73): INFO   (2, 1, 4, 1, 2)
+/app/b12.py(73): INFO   (2, 1, 4, 2, 1)
+/app/b12.py(73): INFO   (2, 1, 5, 1, 1)
+/app/b12.py(73): INFO   (2, 2, 1, 1, 4)
+/app/b12.py(73): INFO   (2, 2, 1, 2, 3)
+/app/b12.py(73): INFO   (2, 2, 1, 3, 2)
+/app/b12.py(73): INFO   (2, 2, 1, 4, 1)
+/app/b12.py(73): INFO   (2, 2, 2, 1, 3)
+/app/b12.py(73): INFO   (2, 2, 2, 2, 2)
+/app/b12.py(73): INFO   (2, 2, 2, 3, 1)
+/app/b12.py(73): INFO   (2, 2, 3, 1, 2)
+/app/b12.py(73): INFO   (2, 2, 3, 2, 1)
+/app/b12.py(73): INFO   (2, 2, 4, 1, 1)
+/app/b12.py(73): INFO   (2, 3, 1, 1, 3)
+/app/b12.py(73): INFO   (2, 3, 1, 2, 2)
+/app/b12.py(73): INFO   (2, 3, 1, 3, 1)
+/app/b12.py(73): INFO   (2, 3, 2, 1, 2)
+/app/b12.py(73): INFO   (2, 3, 2, 2, 1)
+/app/b12.py(73): INFO   (2, 3, 3, 1, 1)
+/app/b12.py(73): INFO   (2, 4, 1, 1, 2)
+/app/b12.py(73): INFO   (2, 4, 1, 2, 1)
+/app/b12.py(73): INFO   (2, 4, 2, 1, 1)
+/app/b12.py(73): INFO   (2, 5, 1, 1, 1)
+/app/b12.py(73): INFO   (3, 1, 1, 1, 4)
+/app/b12.py(73): INFO   (3, 1, 1, 2, 3)
+/app/b12.py(73): INFO   (3, 1, 1, 3, 2)
+/app/b12.py(73): INFO   (3, 1, 1, 4, 1)
+/app/b12.py(73): INFO   (3, 1, 2, 1, 3)
+/app/b12.py(73): INFO   (3, 1, 2, 2, 2)
+/app/b12.py(73): INFO   (3, 1, 2, 3, 1)
+/app/b12.py(73): INFO   (3, 1, 3, 1, 2)
+/app/b12.py(73): INFO   (3, 1, 3, 2, 1)
+/app/b12.py(73): INFO   (3, 1, 4, 1, 1)
+/app/b12.py(73): INFO   (3, 2, 1, 1, 3)
+/app/b12.py(73): INFO   (3, 2, 1, 2, 2)
+/app/b12.py(73): INFO   (3, 2, 1, 3, 1)
+/app/b12.py(73): INFO   (3, 2, 2, 1, 2)
+/app/b12.py(73): INFO   (3, 2, 2, 2, 1)
+/app/b12.py(73): INFO   (3, 2, 3, 1, 1)
+/app/b12.py(73): INFO   (3, 3, 1, 1, 2)
+/app/b12.py(73): INFO   (3, 3, 1, 2, 1)
+/app/b12.py(73): INFO   (3, 3, 2, 1, 1)
+/app/b12.py(73): INFO   (3, 4, 1, 1, 1)
+/app/b12.py(73): INFO   (4, 1, 1, 1, 3)
+/app/b12.py(73): INFO   (4, 1, 1, 2, 2)
+/app/b12.py(73): INFO   (4, 1, 1, 3, 1)
+/app/b12.py(73): INFO   (4, 1, 2, 1, 2)
+/app/b12.py(73): INFO   (4, 1, 2, 2, 1)
+/app/b12.py(73): INFO   (4, 1, 3, 1, 1)
+/app/b12.py(73): INFO   (4, 2, 1, 1, 2)
+/app/b12.py(73): INFO   (4, 2, 1, 2, 1)
+/app/b12.py(73): INFO   (4, 2, 2, 1, 1)
+/app/b12.py(73): INFO   (4, 3, 1, 1, 1)
+/app/b12.py(73): INFO   (5, 1, 1, 1, 2)
+/app/b12.py(73): INFO   (5, 1, 1, 2, 1)
+/app/b12.py(73): INFO   (5, 1, 2, 1, 1)
+/app/b12.py(73): INFO   (5, 2, 1, 1, 1)
+/app/b12.py(73): INFO   (6, 1, 1, 1, 1)
+/app/b12.py(145): INFO Permutation study for N=10 c=5 is 126
+/app/b12.py(152): INFO 0.0001246929168701172: Permutation study for N=10 c=6 is 126
+/app/b12.py(152): INFO 0.00027632713317871094: Permutation study for N=11 c=6 is 252
+/app/b12.py(152): INFO 0.0003745555877685547: Permutation study for N=12 c=6 is 462
+/app/b12.py(152): INFO 0.0003981590270996094: Permutation study for N=13 c=6 is 792
+/app/b12.py(152): INFO 0.0005881786346435547: Permutation study for N=14 c=6 is 1287
+/app/b12.py(152): INFO 0.00074005126953125: Permutation study for N=15 c=6 is 2002
+/app/b12.py(152): INFO 0.0009958744049072266: Permutation study for N=16 c=6 is 3003
+/app/b12.py(152): INFO 0.0013151168823242188: Permutation study for N=17 c=6 is 4368
+/app/b12.py(152): INFO 0.001710653305053711: Permutation study for N=18 c=6 is 6188
+/app/b12.py(152): INFO 0.0022597312927246094: Permutation study for N=19 c=6 is 8568
+/app/b12.py(152): INFO 0.002947568893432617: Permutation study for N=20 c=6 is 11628
+/app/b12.py(152): INFO 0.003783702850341797: Permutation study for N=21 c=6 is 15504
+/app/b12.py(152): INFO 0.004814624786376953: Permutation study for N=22 c=6 is 20349
+/app/b12.py(152): INFO 0.006334781646728516: Permutation study for N=23 c=6 is 26334
+/app/b12.py(152): INFO 0.007908344268798828: Permutation study for N=24 c=6 is 33649
+/app/b12.py(152): INFO 0.009459257125854492: Permutation study for N=25 c=6 is 42504
+/app/b12.py(152): INFO 0.011555194854736328: Permutation study for N=26 c=6 is 53130
+/app/b12.py(152): INFO 0.013725519180297852: Permutation study for N=27 c=6 is 65780
+/app/b12.py(152): INFO 0.016219139099121094: Permutation study for N=28 c=6 is 80730
+/app/b12.py(152): INFO 0.019496917724609375: Permutation study for N=29 c=6 is 98280
+/app/b12.py(152): INFO 0.022818803787231445: Permutation study for N=30 c=6 is 118755
+/app/b12.py(152): INFO 0.027524948120117188: Permutation study for N=31 c=6 is 142506
+/app/b12.py(152): INFO 0.031177282333374023: Permutation study for N=32 c=6 is 169911
+/app/b12.py(152): INFO 0.03762054443359375: Permutation study for N=33 c=6 is 201376
+/app/b12.py(152): INFO 0.043093204498291016: Permutation study for N=34 c=6 is 237336
+/app/b12.py(152): INFO 0.05028033256530762: Permutation study for N=35 c=6 is 278256
+/app/b12.py(152): INFO 0.058357954025268555: Permutation study for N=36 c=6 is 324632
+/app/b12.py(152): INFO 0.07083320617675781: Permutation study for N=37 c=6 is 376992
+/app/b12.py(152): INFO 0.08765888214111328: Permutation study for N=38 c=6 is 435897
+/app/b12.py(152): INFO 0.09470725059509277: Permutation study for N=39 c=6 is 501942
+/app/b12.py(161): INFO Considering -> ?###???????? 3,2,1 condition_record=['?', '#', '#', '#', '?', '?', '?', '?', '?', '?', '?', '?'] contiguous_group=[3, 2, 1]
+/app/b12.py(93): INFO 2:   : condition_record=['?', '#', '#', '#', '?', '?', '?', '?', '?', '?', '?', '?'] contiguous_group=[3, 2, 1]
+/app/b12.py(93): INFO 4:     : condition_record=['.', '#', '#', '#', '?', '?', '?', '?', '?', '?', '?', '?'] contiguous_group=[3, 2, 1]
+/app/b12.py(93): INFO 6:       : condition_record=['#', '#', '#', '?', '?', '?', '?', '?', '?', '?', '?'] contiguous_group=[3, 2, 1]
+/app/b12.py(93): INFO 8:         : condition_record=['.', '?', '?', '?', '?', '?', '?', '?'] contiguous_group=[2, 1]
+/app/b12.py(93): INFO 10:           : condition_record=['?', '?', '?', '?', '?', '?', '?'] contiguous_group=[2, 1]
+/app/b12.py(93): INFO 12:             : condition_record=['.', '?', '?', '?', '?', '?', '?'] contiguous_group=[2, 1]
+
+SNIP
+
+/app/b12.py(93): INFO 12:             : condition_record=['#', '?', '?', '?', '?', '?', '?'] contiguous_group=[2, 1]
+/app/b12.py(93): INFO 14:                  : condition_record=['?', '?', '?', '?', '?', '?'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 16:                  : condition_record=['.', '?', '?', '?', '?', '?'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 18:                       : condition_record=['?', '?', '?', '?', '?'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 20:                     : condition_record=['.', '?', '?', '?', '?'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 22:                       : condition_record=['?', '?', '?', '?'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 24:                         : condition_record=['.', '?', '?', '?'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 26:                           : condition_record=['?', '?', '?'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 28:                             : condition_record=['.', '?', '?'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 30:                               : condition_record=['?', '?'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 32:                                 : condition_record=['.', '?'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 34:                                   : condition_record=['?'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 36:                                     : condition_record=['.'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 38:                                       : condition_record=[] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 36:                                     : condition_record=['#'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 38:                                       : condition_record=[] contiguous_group=[1]
+/app/b12.py(93): INFO 32:                                 : condition_record=['#', '?'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 34:                                   : condition_record=['.'] contiguous_group=[1]
+/app/b12.py(93): INFO 36:                                     : condition_record=[] contiguous_group=[1]
+/app/b12.py(93): INFO 28:                             : condition_record=['#', '?', '?'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 30:                               : condition_record=['.', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 32:                                 : condition_record=['?'] contiguous_group=[1]
+/app/b12.py(93): INFO 34:                                   : condition_record=['.'] contiguous_group=[1]
+/app/b12.py(93): INFO 36:                                     : condition_record=[] contiguous_group=[1]
+/app/b12.py(93): INFO 34:                                   : condition_record=['#'] contiguous_group=[1]
+/app/b12.py(93): INFO 36:                                     : condition_record=[] contiguous_group=[]
+/app/b12.py(98): INFO 36:                                     : FOUND!
+/app/b12.py(93): INFO 24:                         : condition_record=['#', '?', '?', '?'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 26:                           : condition_record=['.', '?', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 28:                             : condition_record=['?', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 30:                               : condition_record=['.', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 32:                                 : condition_record=['?'] contiguous_group=[1]
+/app/b12.py(93): INFO 34:                                   : condition_record=['.'] contiguous_group=[1]
+/app/b12.py(93): INFO 36:                                     : condition_record=[] contiguous_group=[1]
+/app/b12.py(93): INFO 34:                                   : condition_record=['#'] contiguous_group=[1]
+/app/b12.py(93): INFO 36:                                     : condition_record=[] contiguous_group=[]
+/app/b12.py(98): INFO 36:                                     : FOUND!
+/app/b12.py(93): INFO 30:                               : condition_record=['#', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 32:                                 : condition_record=['.'] contiguous_group=[]
+/app/b12.py(93): INFO 34:                                   : condition_record=[] contiguous_group=[]
+/app/b12.py(98): INFO 34:                                   : FOUND!
+/app/b12.py(93): INFO 20:                     : condition_record=['#', '?', '?', '?', '?'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 22:                       : condition_record=['.', '?', '?', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 24:                         : condition_record=['?', '?', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 26:                           : condition_record=['.', '?', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 28:                             : condition_record=['?', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 30:                               : condition_record=['.', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 32:                                 : condition_record=['?'] contiguous_group=[1]
+/app/b12.py(93): INFO 34:                                   : condition_record=['.'] contiguous_group=[1]
+/app/b12.py(93): INFO 36:                                     : condition_record=[] contiguous_group=[1]
+/app/b12.py(93): INFO 34:                                   : condition_record=['#'] contiguous_group=[1]
+/app/b12.py(93): INFO 36:                                     : condition_record=[] contiguous_group=[]
+/app/b12.py(98): INFO 36:                                     : FOUND!
+/app/b12.py(93): INFO 30:                               : condition_record=['#', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 32:                                 : condition_record=['.'] contiguous_group=[]
+/app/b12.py(93): INFO 34:                                   : condition_record=[] contiguous_group=[]
+/app/b12.py(98): INFO 34:                                   : FOUND!
+/app/b12.py(93): INFO 26:                           : condition_record=['#', '?', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 28:                             : condition_record=['.', '?'] contiguous_group=[]
+/app/b12.py(93): INFO 30:                               : condition_record=['?'] contiguous_group=[]
+/app/b12.py(93): INFO 32:                                 : condition_record=['.'] contiguous_group=[]
+/app/b12.py(93): INFO 34:                                   : condition_record=[] contiguous_group=[]
+/app/b12.py(98): INFO 34:                                   : FOUND!
+/app/b12.py(93): INFO 32:                                 : condition_record=['#'] contiguous_group=[]
+/app/b12.py(93): INFO 16:                 : condition_record=['#', '?', '?', '?', '?', '?'] contiguous_group=[1, 1]
+/app/b12.py(93): INFO 18:                   : condition_record=['.', '?', '?', '?', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 20:                     : condition_record=['?', '?', '?', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 22:                       : condition_record=['.', '?', '?', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 24:                         : condition_record=['?', '?', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 26:                           : condition_record=['.', '?', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 28:                             : condition_record=['?', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 30:                               : condition_record=['.', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 32:                                 : condition_record=['?'] contiguous_group=[1]
+/app/b12.py(93): INFO 34:                                   : condition_record=['.'] contiguous_group=[1]
+/app/b12.py(93): INFO 36:                                     : condition_record=[] contiguous_group=[1]
+/app/b12.py(93): INFO 34:                                   : condition_record=['#'] contiguous_group=[1]
+/app/b12.py(93): INFO 36:                                     : condition_record=[] contiguous_group=[]
+/app/b12.py(98): INFO 36:                                     : FOUND!
+/app/b12.py(93): INFO 30:                               : condition_record=['#', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 32:                                 : condition_record=['.'] contiguous_group=[]
+/app/b12.py(93): INFO 34:                                   : condition_record=[] contiguous_group=[]
+/app/b12.py(98): INFO 34:                                   : FOUND!
+/app/b12.py(93): INFO 26:                           : condition_record=['#', '?', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 28:                             : condition_record=['.', '?'] contiguous_group=[]
+/app/b12.py(93): INFO 30:                               : condition_record=['?'] contiguous_group=[]
+/app/b12.py(93): INFO 32:                                 : condition_record=['.'] contiguous_group=[]
+/app/b12.py(93): INFO 34:                                   : condition_record=[] contiguous_group=[]
+/app/b12.py(98): INFO 34:                                   : FOUND!
+/app/b12.py(93): INFO 32:                                 : condition_record=['#'] contiguous_group=[]
+/app/b12.py(93): INFO 22:                       : condition_record=['#', '?', '?', '?'] contiguous_group=[1]
+/app/b12.py(93): INFO 24:                         : condition_record=['.', '?', '?'] contiguous_group=[]
+/app/b12.py(93): INFO 26:                           : condition_record=['?', '?'] contiguous_group=[]
+/app/b12.py(93): INFO 28:                             : condition_record=['.', '?'] contiguous_group=[]
+/app/b12.py(93): INFO 30:                               : condition_record=['?'] contiguous_group=[]
+/app/b12.py(93): INFO 32:                                 : condition_record=['.'] contiguous_group=[]
+/app/b12.py(93): INFO 34:                                   : condition_record=[] contiguous_group=[]
+/app/b12.py(98): INFO 34:                                   : FOUND!
+/app/b12.py(93): INFO 32:                                 : condition_record=['#'] contiguous_group=[]
+/app/b12.py(93): INFO 28:                             : condition_record=['#', '?'] contiguous_group=[]
+/app/b12.py(93): INFO 4:     : condition_record=['#', '#', '#', '#', '?', '?', '?', '?', '?', '?', '?', '?'] contiguous_group=[3, 2, 1]
+/app/b12.py(163): INFO   result=20
+Traceback (most recent call last):
+  File "/app/b12.py", line 166, in <module>
+    raise Exception("Done for now")
+Exception: Done for now
+make: *** [aoc23-console.mk:39: b12.dkrpy-3p12p1.sh] Error 1
