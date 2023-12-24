@@ -38,7 +38,6 @@ zMBDE_INNER_ABSDIR = /app
 
 MBDE_CONTAINER_BASEARGS =                        \
   --name $(zMBDE_SELECTED_CONTAINER_NAME)        \
-  --gpus all                                     \
   --network none                                 \
   -e COLUMNS=$(MBC_CONSOLEPARAM__COLS)           \
   -e LINES=$(MBC_CONSOLEPARAM__LINES)            \

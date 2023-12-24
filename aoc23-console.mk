@@ -44,7 +44,7 @@ elbm-false.sh:
 #################################
 # Tagalong stuff
 mbde-Znb__nbodyCudaCharacterization.%.sh:
-	@docker run --rm $(MBDE_CONTAINER_BASEARGS) nbody -gpu -benchmark
+	@docker run --rm $(MBDE_CONTAINER_BASEARGS) nbody˘ -benchmark
 
 mbde-BA__BuildAllDockerImages.sh:
 	$(MBC_SHOW_WHITE) "Building all docker images..."
