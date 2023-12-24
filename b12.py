@@ -47,7 +47,7 @@ def count_hashtags(map: list) -> int:
 
 TABS = ' '
 
-@lru_cache(maxsize=None)
+# @lru_cache(maxsize=None)
 def p2_search(indent, condition_record, contiguous_group) -> int:
     if indent: indent += TABS
     # Implementing the algo by dmaltor1 in https://www.reddit.com/r/adventofcode/comments/18ghux0/2023_day_12_no_idea_how_to_start_with_this_puzzle/
