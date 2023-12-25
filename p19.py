@@ -10,10 +10,12 @@ class Part:
     a: int = None
     s: int = None
 
+
 @dataclass
 class Workflow:
     name: str = None
     default_dest: str = None
+    order: str = None
     x_op: str = None
     m_op: str = None
     a_op: str = None
@@ -62,6 +64,17 @@ def parse_workflow(dataline: str) -> Workflow:
 
     # TODO save order of operations
     return wf
+
+
+def evaluate_wf(workflows: dict, wf_name: str, part: Part) -> int:
+    # Evaluate the workflow against the part.
+    # If accepted, return the sum, otherwise 0
+    if wf_name == 'R':
+        return 0
+    if wf_name == 'A':
+        return sum(part.__dict__.values())
+
+    wf = workflows[wf_name]
 
 
 def parse_part(dataline: str) -> Part:
