@@ -111,6 +111,7 @@ if __name__ == '__main__':
         else:
             log.info(f"Skipping part one")
 
+        # 167 409 079 868 000
         if expected_p2_answer > -1:
             prev_time = time.time()
             arrangement_count = 0
