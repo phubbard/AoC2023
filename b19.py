@@ -82,7 +82,7 @@ if __name__ == '__main__':
 
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
                 ("b19_sample.py", sample_data,     19114,               -1),
-                ("b19_full.py",     full_data,        -1,               -1),
+                ("b19_full.py",     full_data,    432434,               -1),
             ]:
         
         generator = Generator(dataset, tag)
