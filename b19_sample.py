@@ -7,48 +7,59 @@ parts = [
 ]
 
 def op_px(part):
+    log.info(f"  SENT px")
     if part.a<2006: return op_qkq(part)
     if part.m>2090: return op_A(part)
     return op_rfg(part)
 
 def op_pv(part):
+    log.info(f"  SENT pv")
     if part.a>1716: return op_R(part)
     return op_A(part)
 
 def op_lnx(part):
+    log.info(f"  SENT lnx")
     if part.m>1548: return op_A(part)
     return op_A(part)
 
 def op_rfg(part):
+    log.info(f"  SENT rfg")
     if part.s<537: return op_gd(part)
     if part.x>2440: return op_R(part)
     return op_A(part)
 
 def op_qs(part):
+    log.info(f"  SENT qs")
     if part.s>3448: return op_A(part)
     return op_lnx(part)
 
 def op_qkq(part):
+    log.info(f"  SENT qkq")
     if part.x<1416: return op_A(part)
     return op_crn(part)
 
 def op_crn(part):
+    log.info(f"  SENT crn")
     if part.x>2662: return op_A(part)
     return op_R(part)
 
 def op_in(part):
+    log.info(f"  SENT in")
     if part.s<1351: return op_px(part)
     return op_qqz(part)
 
 def op_qqz(part):
+    log.info(f"  SENT qqz")
     if part.s>2770: return op_qs(part)
     if part.m<1801: return op_hdj(part)
     return op_R(part)
 
 def op_gd(part):
+    log.info(f"  SENT gd")
     if part.a>3333: return op_R(part)
     return op_R(part)
 
 def op_hdj(part):
+    log.info(f"  SENT hdj")
     if part.m>838: return op_A(part)
     return op_pv(part)

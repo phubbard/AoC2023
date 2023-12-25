@@ -31,6 +31,7 @@ class Generator:
         lines +=                [f'']
         for name, steps in self.__workflows.items():
             lines +=            [f'def op_{name}(part):']
+            lines +=            [f'    log.info(f"  SENT {name}")']
             for condition, next in steps:
                 if condition is None:
                     lines +=    [f'    return op_{next}(part)']
@@ -41,14 +42,47 @@ class Generator:
         with open(filename, 'w') as f:
             f.write('\n'.join(lines))
 
+class Part:
+    def __init__(self, x, m, a, s):
+        self.x = x
+        self.m = m
+        self.a = a
+        self.s = s
+
+    def __repr__(self):
+        return f"[x={self.x},m={self.m},a={self.a},s={self.s}]"
+
+_accumulator = 0
+
+def op_ZERO(): 
+    global _accumulator
+    _accumulator = 0
+
+
+def op_A(part):
+    log.info(f"  ACCEPTING {part}")
+    global _accumulator
+    _accumulator += part.x + part.m + part.a + part.s
+    return None
+
+
+def op_R(part):
+    log.info(f"  REJECTING {part}")
+    return None
+
+
+def op_FINAL():
+    global _accumulator
+    return _accumulator
+
 
 if __name__ == '__main__':
 
     sample_data, full_data = get_data_lines('19')
 
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
-                ("b19_sample.py", sample_data,       -1,               -1),
-                ("b19_full.py",     full_data,       -1,               -1),
+                ("b19_sample.py", sample_data,     19114,               -1),
+                ("b19_full.py",     full_data,        -1,               -1),
             ]:
         
         generator = Generator(dataset, tag)
@@ -57,7 +91,16 @@ if __name__ == '__main__':
             arrangement_count = 0
             for row in dataset:
                 log.info(f"Considering -> {row}")
-            found_p1_answer = arrangement_count
+
+            with open(tag, 'r') as file:
+                script_contents = file.read()
+                exec(script_contents)
+
+            op_ZERO()
+            for part in parts:
+                log.info(f"Evaluating {part}")
+                op_in(part)            
+            found_p1_answer = op_FINAL()
             log.info(f"Steps: {found_p1_answer=} with {expected_p1_answer=}")
             assert found_p1_answer == expected_p1_answer
         else:
