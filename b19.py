@@ -31,7 +31,7 @@ class Generator:
         lines +=                [f'']
         for name, steps in self.__workflows.items():
             lines +=            [f'def op_{name}(part):']
-            lines +=            [f'    log.info(f"  SENT {name}")']
+            lines +=            [f'    log.info(f"wf.name={name} part.x=" + str(part.x))']
             for condition, next in steps:
                 if condition is None:
                     lines +=    [f'    return op_{next}(part)']
@@ -41,6 +41,9 @@ class Generator:
 
         with open(filename, 'w') as f:
             f.write('\n'.join(lines))
+
+    def get_workflow_count(self):
+        return len(self.__workflows)
 
 class Part:
     def __init__(self, x, m, a, s):
@@ -60,14 +63,15 @@ def op_ZERO():
 
 
 def op_A(part):
-    log.info(f"  ACCEPTING {part}")
     global _accumulator
-    _accumulator += part.x + part.m + part.a + part.s
+    partsum = part.x + part.m + part.a + part.s
+    _accumulator += partsum
+    log.info(f'{part.x=} accepted {partsum}')
     return None
 
 
 def op_R(part):
-    log.info(f"  REJECTING {part}")
+    # log.info(f"  REJECTING {part}")
     return None
 
 
@@ -81,7 +85,7 @@ if __name__ == '__main__':
     sample_data, full_data = get_data_lines('19')
 
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
-                ("b19_sample.py", sample_data,     19114,               -1),
+                # ("b19_sample.py", sample_data,     19114,               -1),
                 ("b19_full.py",     full_data,    432434,               -1),
             ]:
         
@@ -98,8 +102,9 @@ if __name__ == '__main__':
 
             op_ZERO()
             for part in parts:
-                log.info(f"Evaluating {part}")
-                op_in(part)            
+                # log.info(f"Evaluating {part}")
+                op_in(part)
+            log.info(f'workflows{generator.get_workflow_count()} {len(parts)=}')
             found_p1_answer = op_FINAL()
             log.info(f"Steps: {found_p1_answer=} with {expected_p1_answer=}")
             assert found_p1_answer == expected_p1_answer
