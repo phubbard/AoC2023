@@ -1,5 +1,25 @@
 from utils import get_data_lines, log
 
+work_queue = []
+
+
+class Counter():
+    def __init__(self, name: str):
+        self.name = name
+        self.low_counter = 0
+        self.high_counter = 0
+
+    def count(self, value: int):
+        if value == 0:
+            self.low_counter += 1
+        else:
+            self.high_counter += 1
+        log.debug(f'{self.name} {self.low_counter=} {self.high_counter=}')
+
+    def score(self):
+        score = self.low_counter * self.high_counter
+        log.debug(f'{self.name} {self.low_counter=} {self.high_counter=} {self.score()=}')
+        return self.score()
 
 # Conjunction modules (prefix &) remember the type of the most recent pulse
 # received from each of their connected input modules; they initially default
@@ -63,9 +83,8 @@ class FlipFlop:
             outp_val = 0
 
         for out in self.outputs:
-            log.debug(f'{self.name} -> {out}')
-            # TODO object lookup
-            out.process(outp_val)
+            log.debug(f'{self.name} {outp_val}-> {out}')
+            work_queue.append((out, outp_val))
 
 
 class Default:
@@ -101,9 +120,20 @@ class Broadcaster:
 
     def process(self, input: int):
         for out in self.outputs:
-            log.debug(f'{self.name} -> {out}')
-            # TODO object lookup
-            out.process(input)
+            log.debug(f'{self.name} {input}-> {out}')
+            # TODO send src, dest, value for printf
+            work_queue.append((out, input))
+
+
+def process_work_queue(modules, name):
+    counter = Counter(name)
+    while len(work_queue) > 0:
+        item = work_queue.pop(0)
+        log.debug(f'Processing work queue: {item}')
+        counter.count(item[1])
+        modules[item[0]].process(item[1])
+
+    return counter.score()
 
 
 def parse_datafile(datalines: list):
@@ -128,10 +158,21 @@ def parse_datafile(datalines: list):
     for module in modules:
         log.debug(f'{module} -> {modules[module].outputs}')
 
+    return modules
+
+
+def run_simulation(modules, name, warmup_count = 1000) -> int:
+    log.info(f'Running {warmup_count=} warmup cycles')
+    for _ in range(warmup_count):
+        modules['broadcaster'].process(0)
+        score = process_work_queue(modules, name)
+    log.info(f'{score=} for {name}')
+
 
 if __name__ == '__main__':
     log.setLevel('DEBUG')
     sample, full = get_data_lines(20)
     log.debug(sample)
     parse_datafile(sample)
+    run_simulation(parse_datafile(sample), 'sample')
 
