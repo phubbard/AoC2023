@@ -1,5 +1,7 @@
 from utils import get_data_lines, log
 
+# Queue is a list of tuples (src, dest, value)
+# eg ('a', 'b', 1) means a sent 1 to b
 work_queue = []
 
 
@@ -17,9 +19,9 @@ class Counter():
         log.debug(f'{self.name} {self.low_counter=} {self.high_counter=}')
 
     def score(self):
-        score = self.low_counter * self.high_counter
-        log.debug(f'{self.name} {self.low_counter=} {self.high_counter=} {self.score()=}')
-        return self.score()
+        self.total_score = self.low_counter * self.high_counter
+        log.debug(f'{self.name} {self.low_counter=} {self.high_counter=} {self.total_score=}')
+        return self.total_score
 
 # Conjunction modules (prefix &) remember the type of the most recent pulse
 # received from each of their connected input modules; they initially default
@@ -32,8 +34,8 @@ class Conjunction:
         self.raw = dataline
         self.name = None
         self.outputs = []
-        # TODO for the inputs, we need a list of dictionaries - name and last value
-        self.last = 0
+        self.inputs = {}
+        # For the inputs, we need a dictionary - name and last value
         self._parse()
 
     def _parse(self):
@@ -46,10 +48,17 @@ class Conjunction:
             self.outputs.append(dest.strip())
         log.debug(f'Conjunction: {self.name} -> {self.outputs}')
 
-    def process(self, input: int):
-        # TODO
-        pass
-
+    def process(self, input: int, src_name: str = None):
+        assert (src_name is not None)
+        self.inputs[src_name] = input
+        if all(self.inputs.values()):
+            log.debug(f'{self.name} conj all ones {self.inputs=} flipping to zero -> {self.outputs}')
+            outp_val = 0
+        else:
+            outp_val = 1
+        for out in self.outputs:
+            log.debug(f'{self.name} {outp_val}-> {out}')
+            work_queue.append((self.name, out, outp_val))
 
 # Flip-flop modules (prefix %) are either on or off; they are initially off. If a flip-flop module receives a high
 # pulse, it is ignored and nothing happens. However, if a flip-flop module receives a low pulse, it flips between on
@@ -72,7 +81,7 @@ class FlipFlop:
             self.outputs.append(dest.strip())
         log.debug(f'FlipFlop: {self.name} -> {self.outputs}')
 
-    def process(self, input: int):
+    def process(self, input: int, src_name: str = None):
         if input == 1:
             return
         if self.value == 0:
@@ -84,7 +93,7 @@ class FlipFlop:
 
         for out in self.outputs:
             log.debug(f'{self.name} {outp_val}-> {out}')
-            work_queue.append((out, outp_val))
+            work_queue.append((self.name, out, outp_val))
 
 
 class Default:
@@ -94,8 +103,8 @@ class Default:
         self.name = dataline
         self.outputs = []
 
-    def process(self, input: int):
-        log.debug(f'{self.name} {input=}')
+    def process(self, input: int, src_name: str = None):
+        log.debug(f'{self.name} got {input=} from {src_name}')
 
 
 # There is a single broadcast module (named broadcaster). When it receives a
@@ -118,20 +127,21 @@ class Broadcaster:
 
         log.debug(f'Broadcaster: {self.name} -> {self.outputs}')
 
-    def process(self, input: int):
+    def process(self, input: int, src_name: str = None):
         for out in self.outputs:
-            log.debug(f'{self.name} {input}-> {out}')
-            # TODO send src, dest, value for printf
-            work_queue.append((out, input))
+            log.debug(f'{src_name} -> {self.name} {input}-> {out}')
+            # send src, dest, value for printf
+            work_queue.append((self.name, out, input))
 
 
 def process_work_queue(modules, name):
     counter = Counter(name)
     while len(work_queue) > 0:
+        # Queue is a list of tuples (src, dest, value)
         item = work_queue.pop(0)
         log.debug(f'Processing work queue: {item}')
-        counter.count(item[1])
-        modules[item[0]].process(item[1])
+        counter.count(item[2])
+        modules[item[1]].process(item[2], item[0])
 
     return counter.score()
 
@@ -163,16 +173,17 @@ def parse_datafile(datalines: list):
 
 def run_simulation(modules, name, warmup_count = 1000) -> int:
     log.info(f'Running {warmup_count=} warmup cycles')
+    score = 0
     for _ in range(warmup_count):
         modules['broadcaster'].process(0)
-        score = process_work_queue(modules, name)
+        score += process_work_queue(modules, name)
     log.info(f'{score=} for {name}')
 
 
 if __name__ == '__main__':
-    log.setLevel('DEBUG')
+    log.setLevel('INFO')
     sample, full = get_data_lines(20)
     log.debug(sample)
     parse_datafile(sample)
-    run_simulation(parse_datafile(sample), 'sample')
+    run_simulation(parse_datafile(sample), 'sample', warmup_count=1000)
 
