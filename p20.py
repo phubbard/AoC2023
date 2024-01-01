@@ -17,6 +17,7 @@ class BaseClass:
         self.name = None
         self.low_counter = 0
         self.high_counter = 0
+        self.done = False
 
     def get_counts(self):
         return self.low_counter, self.high_counter
@@ -130,6 +131,10 @@ class Default(BaseClass):
 
     def process(self, input: int, src_name: str = None):
         log.debug(f'{self.name} got {input=} from {src_name}')
+        if self.name == 'rx':
+            if input == 0:
+                self.done = True
+                log.info('RX DONE')
 
 
 class Button(BaseClass):
@@ -246,6 +251,22 @@ def run_simulation(modules, name, warmup_count = 1000):
         log.warning(f'{score - 11687500} should be 0')
 
 
+def done(modules):
+    return modules['rx'].done
+
+def part_two(modules):
+    # Now we keep track of rx and button presses
+    button_presses = 0
+    while not done(modules):
+        modules['button'].go()
+        button_presses += 1
+        process_work_queue(modules, 'full')
+
+        if button_presses % 100000 == 0:
+            log.info(f'RX not done after {button_presses} button presses')
+
+    log.info(f'RX done after {button_presses} button presses')
+
 if __name__ == '__main__':
     log.setLevel('INFO')
     sample, full = get_data_lines(20)
@@ -254,3 +275,4 @@ if __name__ == '__main__':
 
     run_simulation(parse_datafile(full), 'full', warmup_count=1000)
 
+    part_two(parse_datafile(full))
