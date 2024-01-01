@@ -4,25 +4,6 @@ from utils import get_data_lines, log
 # eg ('a', 'b', 1) means a sent 1 to b
 work_queue = []
 
-
-class Counter():
-    def __init__(self, name: str):
-        self.name = name
-        self.low_counter = 0
-        self.high_counter = 0
-
-    def count(self, value: int):
-        if value == 0:
-            self.low_counter += 1
-        else:
-            self.high_counter += 1
-        # log.debug(f'{self.name} {self.low_counter=} {self.high_counter=}')
-
-    def score(self):
-        self.total_score = self.low_counter * self.high_counter
-        log.debug(f'{self.name} {self.low_counter=} {self.high_counter=} {self.total_score=}')
-        return self.total_score
-
 def binary_to_printstr(inp: int) -> str:
     if inp == 0:
         return 'low'
@@ -32,7 +13,13 @@ def binary_to_printstr(inp: int) -> str:
 
 class BaseClass:
     def __init__(self, dataline: str):
-        pass
+        self.raw = dataline
+        self.name = None
+        self.low_counter = 0
+        self.high_counter = 0
+
+    def get_counts(self):
+        return self.low_counter, self.high_counter
 
     def _parse(self):
         pass
@@ -52,6 +39,14 @@ class BaseClass:
             return self.outputs
         return []
 
+    def send(self, dest: str, value: int):
+        if value == 0:
+            self.low_counter += 1
+        else:
+            self.high_counter += 1
+        work_queue.append((self.name, dest, value))
+        log.debug(f'{self.name} -{binary_to_printstr(value)}--> {dest}')
+
     def process(self, input: int, src_name: str = None):
         pass
 
@@ -65,11 +60,9 @@ class BaseClass:
 class Conjunction(BaseClass):
     def __init__(self, dataline: str):
         super().__init__(dataline)
-        self.raw = dataline
-        self.name = None
         self.outputs = []
-        self.inputs = {}
         # For the inputs, we need a dictionary - name and last value
+        self.inputs = {}
         self._parse()
 
     def _parse(self):
@@ -91,16 +84,15 @@ class Conjunction(BaseClass):
         else:
             outp_val = 1
         for out in self.outputs:
-            log.warning(f'{self.name} -{binary_to_printstr(outp_val)}--> {out}')
-            work_queue.append((self.name, out, outp_val))
+            self.send(out, outp_val)
+
 
 # Flip-flop modules (prefix %) are either on or off; they are initially off. If a flip-flop module receives a high
 # pulse, it is ignored and nothing happens. However, if a flip-flop module receives a low pulse, it flips between on
 # and off. If it was off, it turns on and sends a high pulse. If it was on, it turns off and sends a low pulse.
 class FlipFlop(BaseClass):
     def __init__(self, dataline: str):
-        self.raw = dataline
-        self.name = None
+        super().__init__(dataline)
         self.value = 0
         self.outputs = []
         self._parse()
@@ -113,6 +105,7 @@ class FlipFlop(BaseClass):
         destinations = tokens[1].split(',')
         for dest in destinations:
             self.outputs.append(dest.strip())
+
         log.debug(f'parsed FlipFlop: {self.name} -> {self.outputs}')
 
     def process(self, input: int, src_name: str = None):
@@ -126,26 +119,35 @@ class FlipFlop(BaseClass):
             outp_val = 0
 
         for out in self.outputs:
-            log.warning(f'{self.name} -{binary_to_printstr(outp_val)}--> {out}')
-            work_queue.append((self.name, out, outp_val))
+            self.send(out, outp_val)
 
 
 class Default(BaseClass):
     # there are untyped modules eg output that we need to handle.
     def __init__(self, dataline: str):
-        self.raw = dataline
+        super().__init__(dataline)
         self.name = dataline
-        self.outputs = []
 
     def process(self, input: int, src_name: str = None):
         log.debug(f'{self.name} got {input=} from {src_name}')
+
+
+class Button(BaseClass):
+    def __init__(self, dataline: str):
+        super().__init__(dataline)
+        self.name = 'button'
+        self._parse()
+        self.outputs = ['broadcaster']
+
+    def go(self):
+        self.send('broadcaster', 0)
 
 
 # There is a single broadcast module (named broadcaster). When it receives a
 # pulse, it sends the same pulse to all of its destination modules.
 class Broadcaster(BaseClass):
     def __init__(self, dataline: str):
-        self.raw = dataline
+        super().__init__(dataline)
         self.name = 'broadcaster'
         self.outputs = []
         self._parse()
@@ -158,27 +160,18 @@ class Broadcaster(BaseClass):
         destinations = tokens[1].split(',')
         for dest in destinations:
             self.outputs.append(dest.strip())
-
         log.debug(f'parsed Broadcaster: {self.name} -> {self.outputs}')
 
     def process(self, input: int, src_name: str = None):
         for out in self.outputs:
-            log.warning(f'{self.name} -{binary_to_printstr(input)}--> {out}')
-            # send src, dest, value for printf
-            work_queue.append((self.name, out, input))
+            self.send(out, input)
 
 
 def process_work_queue(modules, name):
-    counter = Counter(name)
     while len(work_queue) > 0:
         # Queue is a list of tuples (src, dest, value)
         item = work_queue.pop(0)
-        # log.debug(f'Processing work queue: {item}')
-        counter.count(item[2])
         modules[item[1]].process(item[2], item[0])
-
-    # log.debug(f'Work queue empty, {counter=}')
-    return counter.score()
 
 
 def parse_datafile(datalines: list):
@@ -201,9 +194,12 @@ def parse_datafile(datalines: list):
                 log.debug(f'Found implied default module: {output}')
                 modules[output] = Default(output)
 
+    log.debug('Modules processed, adding Button')
+    modules['button'] = Button('button')
+
     log.debug('Modules processed, scanning for inputs')
     for module in modules:
-        for output in modules[module].outputs:
+        for output in modules[module].get_outputs():
             modules[output].add_input(module)
 
     for module in modules:
@@ -212,14 +208,42 @@ def parse_datafile(datalines: list):
     return modules
 
 
-def run_simulation(modules, name, warmup_count = 1000) -> int:
+def dump_counters(modules):
+    low_counter = 0
+    high_counter = 0
+
+    for module in modules:
+        low, high = modules[module].get_counts()
+        low_counter += low
+        high_counter += high
+        log.debug(f'{module} {modules[module].get_counts()=}')
+    log.info(f'CNT {low_counter} {high_counter}')
+
+
+def total_score(modules) -> int:
+    low_counter = 0
+    high_counter = 0
+    for module in modules:
+        low, high = modules[module].get_counts()
+        low_counter += low
+        high_counter += high
+    assert low_counter > 0
+    assert high_counter > 0
+    log.info(f"{low_counter} * {high_counter} = {low_counter * high_counter}")
+    return low_counter * high_counter
+
+
+def run_simulation(modules, name, warmup_count = 1000):
     log.info(f'Running {warmup_count=} warmup cycles')
-    score = 0
     for _ in range(warmup_count):
-        log.warning(f'button -{binary_to_printstr(0)}--> broadcaster')
-        modules['broadcaster'].process(0)
-        score += process_work_queue(modules, name)
+        modules['button'].go()
+        process_work_queue(modules, name)
+
+    dump_counters(modules)
+    score = total_score(modules)
     log.info(f'{score=} for {name} after {warmup_count} runs')
+    if name == 'sample':
+        log.warning(f'{score - 11687500} should be 0')
 
 
 if __name__ == '__main__':
@@ -227,4 +251,6 @@ if __name__ == '__main__':
     sample, full = get_data_lines(20)
     log.debug(sample)
     run_simulation(parse_datafile(sample), 'sample', warmup_count=1000)
+
+    run_simulation(parse_datafile(full), 'full', warmup_count=1000)
 
