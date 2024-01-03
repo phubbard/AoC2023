@@ -80,6 +80,54 @@ def op_FINAL():
     return _accumulator
 
 
+class Space:
+    def __init__(self, x_min, x_max, m_min, m_max, a_min, ,a_max, s_min, s_max):
+        self.x_min = x_min
+        self.x_max = x_max
+        self.m_min = m_min
+        self.m_max = m_max
+        self.a_min = a_min
+        self.a_max = a_max
+        self.s_min = s_min
+        self.s_max = s_max
+
+    def space_split(self, condition):
+        which = condition[0:2]
+        value = int(condition[2:])
+        if which == 'x<':
+            selected  = Space(self.x_min,  value - 1, self.m_min, self.m_max, self.a_min, self.a_max, self.s_min, self.s_max)
+            remaining = Space(value,      self.x_max, self.m_min, self.m_max, self.a_min, self.a_max, self.s_min, self.s_max)
+        elif which == 'x>':
+            selected  = Space(value + 1,  self.x_max, self.m_min, self.m_max, self.a_min, self.a_max, self.s_min, self.s_max)
+            remaining = Space(self.x_min,      value, self.m_min, self.m_max, self.a_min, self.a_max, self.s_min, self.s_max)
+        elif which == 'm<':
+            selected  = Space(self.x_min, self.x_max, self.m_min,  value - 1, self.a_min, self.a_max, self.s_min, self.s_max)
+            remaining = Space(self.x_min, self.x_max, value,      self.m_max, self.a_min, self.a_max, self.s_min, self.s_max)
+        elif which == 'm>':
+            selected  = Space(self.x_min, self.x_max, value + 1,  self.m_max, self.a_min, self.a_max, self.s_min, self.s_max)
+            remaining = Space(self.x_min, self.x_max, self.m_min,      value, self.a_min, self.a_max, self.s_min, self.s_max)
+        elif which == 'a<':
+            selected  = Space(self.x_min, self.x_max, self.m_min, self.m_max, self.a_min,  value - 1, self.s_min, self.s_max)
+            remaining = Space(self.x_min, self.x_max, self.m_min, self.m_max, value,      self.a_max, self.s_min, self.s_max)
+        elif which == 'a>':
+            selected  = Space(self.x_min, self.x_max, self.m_min, self.m_max, value + 1,  self.a_max, self.s_min, self.s_max)
+            remaining = Space(self.x_min, self.x_max, self.m_min, self.m_max, self.a_min,      value, self.s_min, self.s_max)
+        elif which == 's<':
+            selected  = Space(self.x_min, self.x_max, self.m_min, self.m_max, self.a_min, self.a_max, self.s_min,  value - 1)
+            remaining = Space(self.x_min, self.x_max, self.m_min, self.m_max, self.a_min, self.a_max, value,      self.s_max)
+        elif which == 's>':
+            selected  = Space(self.x_min, self.x_max, self.m_min, self.m_max, self.a_min, self.a_max, value + 1,  self.s_max)
+            remaining = Space(self.x_min, self.x_max, self.m_min, self.m_max, self.a_min, self.a_max, self.s_min,      value)
+        else:
+            raise Exception(f"Unknown condition {condition}")
+        return selected, remaining
+
+    def __repr__(self):
+        return f"[x={self.x_min}-{self.x_max},m={self.m_min}-{self.m_max},a={self.a_min}-{self.a_max},s={self.s_min}-{self.s_max}]"
+
+
+
+
 if __name__ == '__main__':
 
     sample_data, full_data = get_data_lines('19')
@@ -114,10 +162,24 @@ if __name__ == '__main__':
         # 167 409 079 868 000
         if expected_p2_answer > -1:
             prev_time = time.time()
-            arrangement_count = 0
+            
             for row in dataset:
                 log.info(f"For row -> {row=}")
                 curr_time = time.time()
+
+                def split_px(remaining):
+                    accepted = []
+                    
+                    selected, remaining = remaining.space_split('a<2006')
+                    accepted.append(split_qpq(selected))
+                    
+                    selected, remaining = remaining.space_split('m>2090')
+                    accepted.append(selected)
+
+                    selected = remaining
+                    accepted.append(split_rfg(selected))
+
+
 
                 log.info(f"{curr_time - prev_time}:  found {permutations} permutations for {row}")
                 prev_time = curr_time

@@ -11,6 +11,20 @@ def op_px(part):
     if part.m>2090: return op_A(part)
     return op_rfg(part)
 
+
+def split_px(remaining):
+    accepted = []
+    
+    selected, remaining = remaining.space_split('a<2006')
+    accepted.append(split_qpq(selected))
+    
+    selected, remaining = remaining.space_split('m>2090')
+    accepted.append(selected)
+
+    selected = remaining
+    accepted.append(split_rfg(selected))
+
+
 def op_pv(part):
     if part.a>1716: return op_R(part)
     return op_A(part)
