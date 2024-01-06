@@ -1,9 +1,16 @@
 digraph finite_state_machine {
+    graph [layout=fdp];
     fontname="Helvetica,Arial,sans-serif"
     node [fontname="Helvetica,Arial,sans-serif"]
     edge [fontname="Helvetica,Arial,sans-serif"]
     rankdir=LR;
-    node [shape = rectangle]; "broadcaster";
+    node [shape = rectangle]; "BC";
     node [shape = triangle]; inv con;
     node [shape = square]; a b;
+    "BC" -> a;
+    inv -> b ;
+    con -> output ;
+    a -> inv ;
+    a -> con ;
+    b -> con ;
 }

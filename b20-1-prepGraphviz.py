@@ -52,16 +52,29 @@ if __name__ == '__main__':
                     inverters[token].append(dest.strip())
             else:
                 raise Exception(f"Unknown line: {line}")
+        
+        broadcaster_label = "BC"
 
         lines = []
         lines +=             ['digraph finite_state_machine {']
+        lines +=             [f'    graph [layout=fdp];']
         lines +=             [f'    fontname="Helvetica,Arial,sans-serif"']
         lines +=             [f'    node [fontname="Helvetica,Arial,sans-serif"]']
         lines +=             [f'    edge [fontname="Helvetica,Arial,sans-serif"]']
         lines +=             [f'    rankdir=LR;']
-        lines +=             [f'    node [shape = rectangle]; "broadcaster";']
+        lines +=             [f'    node [shape = rectangle]; "{broadcaster_label}";']
         lines +=             [f'    node [shape = triangle]; {" ".join(inverters.keys())};']
         lines +=             [f'    node [shape = square]; {" ".join(flip_flops.keys())};']
+        
+        for dest in broadcaster:
+            lines +=         [f'    "{broadcaster_label}" -> {dest};']    
+        for inverter, destinations in inverters.items():
+            for d in destinations:
+                lines +=     [f'    {inverter} -> {d} ;']
+        for flip_flop, destinations in flip_flops.items():
+            for d in destinations:
+                lines +=     [f'    {flip_flop} -> {d} ;']
+
         lines +=             ['}']
 
         # finally, write to file
