@@ -1,7 +1,6 @@
 
-from utils import load_2d_arrays
+from utils import load_2d_arrays, blog
 
-import inspect
 import os
 
 
@@ -9,19 +8,6 @@ def safe_dictionary_insert(key, value, dictionary):
     if key in dictionary: raise Exception(f"Key {key} already in dictionary")
     dictionary[key] = value
     return value
-
-
-def blog(message, multiline=None):
-    frameNudge = 0
-    caller = inspect.getframeinfo(inspect.stack(context=1 + frameNudge)[1 + frameNudge][0])
-    _, filename = os.path.split(caller.filename)
-    first_prefix = "%s(%d): %s" % (filename, caller.lineno, message)
-    if multiline is None:
-        print(first_prefix)
-    else:
-        for line in multiline.split("\n"):
-            print(f"{first_prefix} {line}")
-            first_prefix = " " * len(first_prefix)
 
 
 class Grid:

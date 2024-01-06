@@ -1,11 +1,30 @@
 from collections import defaultdict
 import heapq
 from itertools import permutations, combinations_with_replacement
+
+import inspect
+import os
+
 import logging
 
 logging.basicConfig(level=logging.INFO, format='%(pathname)s(%(lineno)s): %(levelname)s %(message)s')
 log = logging.getLogger()
 
+def blog(message, multiline=None, frameNudge=0):
+    """Brad's logging utility.
+    
+    Document this later, but frameNudge greater than 0 will report the log as coming
+    from higher on the stack, useful when there is wrapping."""
+    frameNudge = 0
+    caller = inspect.getframeinfo(inspect.stack(context=1 + frameNudge)[1 + frameNudge][0])
+    _, filename = os.path.split(caller.filename)
+    first_prefix = "%s(%d): %s" % (filename, caller.lineno, message)
+    if multiline is None:
+        print(first_prefix)
+    else:
+        for line in multiline.split("\n"):
+            print(f"{first_prefix} {line}")
+            first_prefix = " " * len(first_prefix)
 
 def find_permutations(input_chars, length=8):
     return permutations(input_chars, r=length)
