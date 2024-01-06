@@ -18,6 +18,7 @@ class BaseClass:
         self.counters = [0, 0]   # low, high
         self.done = False
         self.inputs = {}
+        self.previous_inputs = {}
 
     def get_counts(self) -> tuple:
         # low, high
@@ -28,6 +29,7 @@ class BaseClass:
 
     def add_input(self, name: str):
         self.inputs[name] = 0
+        self.previous_inputs[name] = 0
 
     def get_inputs(self) -> list:
         return self.inputs
@@ -58,6 +60,7 @@ class Conjunction(BaseClass):
         self.outputs = []
         # For the inputs, we need a dictionary - name and last value
         self.inputs = {}
+        self.previous_inputs = {}
         self._parse()
 
     def _parse(self):
@@ -70,16 +73,25 @@ class Conjunction(BaseClass):
             self.outputs.append(dest.strip())
         log.debug(f'parsed Conjunction: {self.name} -> {self.outputs}')
 
+    def part_two(self, input: int, src_name: str = None):
+        if self.name is not 'dg':
+            return
+
     def process(self, input: int, src_name: str = None):
         assert (src_name is not None)
+
+        if self.name == 'dg':
+            if self.previous_inputs[src_name] == 0 and input == 1:
+                log.info(f'Flip to one at {self.button.presses} {self.inputs} on input {src_name}')
+                self.previous_inputs[src_name] = input
         self.inputs[src_name] = input
+
         if all(self.inputs.values()):
-            log.debug(f'{self.name} conj all ones {self.inputs=} flipping to zero -> {self.outputs}')
-            outp_val = 0
+            output_value = 0
         else:
-            outp_val = 1
+            output_value = 1
         for out in self.outputs:
-            self.send(out, outp_val)
+            self.send(out, output_value)
 
 
 # Flip-flop modules (prefix %) are either on or off; they are initially off. If a flip-flop module receives a high
@@ -132,6 +144,7 @@ class Default(BaseClass):
 
 
 class Button(BaseClass):
+    # Singleton
     def __init__(self, dataline: str):
         super().__init__(dataline)
         self.name = 'button'
@@ -167,7 +180,7 @@ class Broadcaster(BaseClass):
             self.send(out, input)
 
 
-def process_work_queue(modules, name):
+def process_work_queue(modules):
     while len(work_queue) > 0:
         # Queue is a list of tuples (src, dest, value)
         item = work_queue.pop(0)
@@ -238,7 +251,7 @@ def run_simulation(modules, name, warmup_count = 1000):
     log.info(f'Running {warmup_count=} warmup cycles')
     for _ in range(warmup_count):
         modules['button'].go()
-        process_work_queue(modules, name)
+        process_work_queue(modules)
 
     dump_counters(modules)
     score = total_score(modules)
@@ -250,10 +263,17 @@ def run_simulation(modules, name, warmup_count = 1000):
 def part_two(modules):
     # Now we keep track of rx and button presses
     button_presses = 0
+    # For part two, the conjunction module connected to rx needs to track button presses, so save a reference
+    modules['dg'].button = modules['button']
+
+    # This takes approximately forever. The conjnction module connected to rx is basically a counter, and the
+    # four inputs each have periods. The code logs them, and then I fed those numbers into math.lcm to get the
+    # answer of 229215609826339. Appx 2*10^15
+
     while not modules['rx'].done:
         modules['button'].go()
         button_presses += 1
-        process_work_queue(modules, 'full')
+        process_work_queue(modules)
 
         if button_presses % 100000 == 0:
             log.info(f'RX not done after {button_presses} button presses')
@@ -266,7 +286,6 @@ if __name__ == '__main__':
     sample, full = get_data_lines(20)
     log.debug(sample)
     run_simulation(parse_datafile(sample), 'sample', warmup_count=1000)
-
     run_simulation(parse_datafile(full), 'full', warmup_count=1000)
 
-    # part_two(parse_datafile(full))
+    part_two(parse_datafile(full))
