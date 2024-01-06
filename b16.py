@@ -22,8 +22,8 @@ if __name__ == '__main__':
 
     day_number = '16'
 
-    sample_data = open("data/20s.txt").read()
-    real_data = open("data/20.txt").read()
+    sample_data = open(f"data/{day_number}s.txt").read()
+    real_data = open(f"data/{day_number}.txt").read()
 
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
                 ("sample", sample_data,       8,      -1),
@@ -37,6 +37,13 @@ if __name__ == '__main__':
             assert found_answer_p1 == expected_p1_answer
         else:
             log(f"Skipping part one")
+
+        found_answer_p2 = 0
+        log(f"expected_p2_answer={expected_p2_answer} and found_answer_p2={found_answer_p2}")
+        if expected_p2_answer > -1:
+            assert found_answer_p2 == expected_p2_answer
+        else:
+            log(f"Skipping part two")
 
 
     log(f"Success")
