@@ -15,36 +15,30 @@ class BaseClass:
     def __init__(self, dataline: str):
         self.raw = dataline
         self.name = None
-        self.low_counter = 0
-        self.high_counter = 0
+        self.counters = [0, 0]   # low, high
         self.done = False
+        self.inputs = {}
 
-    def get_counts(self):
-        return self.low_counter, self.high_counter
+    def get_counts(self) -> tuple:
+        # low, high
+        return self.counters[0], self.counters[1]
 
     def _parse(self):
         pass
 
-    def add_input(self, name):
-        if hasattr(self, 'inputs'):
-            self.inputs[name] = 0
-        pass
+    def add_input(self, name: str):
+        self.inputs[name] = 0
 
-    def get_inputs(self):
-        if hasattr(self, 'inputs'):
-            return self.inputs
-        return []
+    def get_inputs(self) -> list:
+        return self.inputs
 
-    def get_outputs(self):
+    def get_outputs(self) -> list:
         if hasattr(self, 'outputs'):
             return self.outputs
         return []
 
     def send(self, dest: str, value: int):
-        if value == 0:
-            self.low_counter += 1
-        else:
-            self.high_counter += 1
+        self.counters[value] += 1
         work_queue.append((self.name, dest, value))
         log.debug(f'{self.name} -{binary_to_printstr(value)}--> {dest}')
 
@@ -141,7 +135,6 @@ class Button(BaseClass):
     def __init__(self, dataline: str):
         super().__init__(dataline)
         self.name = 'button'
-        self._parse()
         self.outputs = ['broadcaster']
 
     def go(self):
@@ -210,6 +203,7 @@ def parse_datafile(datalines: list):
     for module in modules:
         log.debug(f'FINAL {module} in {modules[module].get_inputs()}-> {modules[module].get_outputs()}')
 
+    # TODO generate a graph of nodes and edges - use networkx
     return modules
 
 
@@ -254,6 +248,7 @@ def run_simulation(modules, name, warmup_count = 1000):
 def done(modules):
     return modules['rx'].done
 
+
 def part_two(modules):
     # Now we keep track of rx and button presses
     button_presses = 0
@@ -267,6 +262,7 @@ def part_two(modules):
 
     log.info(f'RX done after {button_presses} button presses')
 
+
 if __name__ == '__main__':
     log.setLevel('INFO')
     sample, full = get_data_lines(20)
@@ -275,4 +271,4 @@ if __name__ == '__main__':
 
     run_simulation(parse_datafile(full), 'full', warmup_count=1000)
 
-    part_two(parse_datafile(full))
+    # part_two(parse_datafile(full))
