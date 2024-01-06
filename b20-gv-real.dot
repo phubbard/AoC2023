@@ -1,0 +1,9 @@
+digraph finite_state_machine {
+    fontname="Helvetica,Arial,sans-serif"
+    node [fontname="Helvetica,Arial,sans-serif"]
+    edge [fontname="Helvetica,Arial,sans-serif"]
+    rankdir=LR;
+    node [shape = rectangle]; "broadcaster";
+    node [shape = triangle]; dg dv xq lk vv zv sp xt jc;
+    node [shape = square]; hs vp kz nv hx mm fd hg td bl br qh sg dm gt ln mc tx mg nt cd rc nj gf rm xx jt zl xc tp lc vh mq cc vn tr hl dc jq kx cx sl cz qb xv pt rv ps;
+}
