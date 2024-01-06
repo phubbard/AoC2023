@@ -1,5 +1,6 @@
 
-import csv
+from utils import load_2d_arrays
+
 import inspect
 import os
 
@@ -10,41 +11,58 @@ def safe_dictionary_insert(key, value, dictionary):
     return value
 
 
-def log(message):
+def blog(message, multiline=None):
     frameNudge = 0
     caller = inspect.getframeinfo(inspect.stack(context=1 + frameNudge)[1 + frameNudge][0])
     _, filename = os.path.split(caller.filename)
-    print("%s(%d): %s" % (filename, caller.lineno, message))
+    first_prefix = "%s(%d): %s" % (filename, caller.lineno, message)
+    if multiline is None:
+        print(first_prefix)
+    else:
+        for line in multiline.split("\n"):
+            print(f"{first_prefix} {line}")
+            first_prefix = " " * len(first_prefix)
 
+
+class Grid:
+    def __init__(self, data: list):
+        self.GRID_CONTENTS = tuple((tuple(row) for row in data))
+        self.GRID_HEIGHT   = len(data)
+        self.GRID_WIDTH    = len(data[0])
+
+    def __str__(self):
+        return "\n".join(["".join(row) for row in self.GRID_CONTENTS])
 
 
 if __name__ == '__main__':
 
-    day_number = '16'
+    day_number = 16
 
-    sample_data = open(f"data/{day_number}s.txt").read()
-    real_data = open(f"data/{day_number}.txt").read()
+    sample_data, full_data = load_2d_arrays(day_number)
 
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
-                ("sample", sample_data,       8,      -1),
-                ("real",   real_data,      7097,     355),
+                ("sample", sample_data,       -1,      -1),
+                ("real",   full_data,         -1,      -1),
             ]:
-        log(f"Considering -> {tag}")
+        blog(f"Considering -> {tag}")
+
+        grid = Grid(dataset)
+        blog(f"grid.GRID_CONTENTS=", multiline=str(grid))
 
         found_answer_p1 = 0
-        log(f"expected_p1_answer={expected_p1_answer} and found_answer_p1={found_answer_p1}")
+        blog(f"expected_p1_answer={expected_p1_answer} and found_answer_p1={found_answer_p1}")
         if expected_p1_answer > -1:
             assert found_answer_p1 == expected_p1_answer
         else:
-            log(f"Skipping part one")
+            blog(f"Skipping part one")
 
         found_answer_p2 = 0
-        log(f"expected_p2_answer={expected_p2_answer} and found_answer_p2={found_answer_p2}")
+        blog(f"expected_p2_answer={expected_p2_answer} and found_answer_p2={found_answer_p2}")
         if expected_p2_answer > -1:
             assert found_answer_p2 == expected_p2_answer
         else:
-            log(f"Skipping part two")
+            blog(f"Skipping part two")
 
 
-    log(f"Success")
+    blog(f"Success")
 
