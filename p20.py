@@ -136,9 +136,11 @@ class Button(BaseClass):
         super().__init__(dataline)
         self.name = 'button'
         self.outputs = ['broadcaster']
+        self.presses = 0
 
     def go(self):
         self.send('broadcaster', 0)
+        self.presses += 1
 
 
 # There is a single broadcast module (named broadcaster). When it receives a
@@ -245,14 +247,10 @@ def run_simulation(modules, name, warmup_count = 1000):
         log.warning(f'{score - 11687500} should be 0')
 
 
-def done(modules):
-    return modules['rx'].done
-
-
 def part_two(modules):
     # Now we keep track of rx and button presses
     button_presses = 0
-    while not done(modules):
+    while not modules['rx'].done:
         modules['button'].go()
         button_presses += 1
         process_work_queue(modules, 'full')
