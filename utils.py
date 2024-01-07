@@ -118,3 +118,126 @@ def safe_insert(key, value, dictish):
         raise Exception(f"Cannot supplant at {str(key)=} ...\n  EXISTING {str(existing)} \n  NEW      {str(value)}")
     dictish[key] = value
     return value
+
+
+# From 2022 day 12 - Dijkstra's algorithm and related code
+def is_adjacent(source: int, dest: int, elevation_map) -> int:
+    # The adjacency matrix creation needs to know if two vertices are connected or not. This answers it.
+    num_cols = len(elevation_map[0])
+    source_row, source_col = divmod(source, num_cols)
+    dest_row, dest_col = divmod(dest, num_cols)
+    source_height = elevation_map[source_row][source_col]
+    dest_height = elevation_map[dest_row][dest_col]
+
+    if source == dest:
+        return 0  # Zeros on the diagonal by definition
+    # For part one, you can step up one or down many. For part two, only up or down one.
+    # if (dest_height - source_height) > 1:
+    if (source_height - dest_height) > 1:
+        return 0
+
+    if source_row == dest_row:
+        if abs(source_col - dest_col) > 1:
+            return 0  # More than one away
+        # nb we already checked for height diff above
+        return 1
+    if abs(source_row - dest_row) > 1:
+        return 0
+    if source_col == dest_col:
+        return 1
+
+    # All that and checking delta H and distance might be a lot simpler. Ahh well.
+    return 0
+
+
+def to_adjacency(map):
+    # For each cell/vertex, the LRUD cells are adjacent if the height difference is <= 1.
+    # For N cells, the matrix is NxN, symmetric about the diagonal, zeros on diagonal
+    num_cols = len(map[0])
+    col_zero = [row[0] for row in map]
+    num_rows = len(col_zero)
+    num_cells = num_rows * num_cols
+    print(f"{num_cols} cols and {num_rows} rows == {num_cells}^2 in adjacency matrix")
+    # Avert your eyes.
+    zero_row = [0 for x in range(num_cells)]
+    adj_matrix = [deepcopy(zero_row) for y in range(num_cells)]
+
+    for row_idx in range(num_cells):
+        for col_idx in range(num_cells):
+            adj_matrix[row_idx][col_idx] = is_adjacent(row_idx, col_idx, map)
+
+    return adj_matrix
+
+
+##########################################################
+#
+
+class Graph:
+    # Code from https://www.geeksforgeeks.org/python-program-for-dijkstras-shortest-path-algorithm-greedy-algo-7/
+    # Python program for Dijkstra's single source shortest path algorithm. The program is
+    # for adjacency matrix representation of the graph.
+    def __init__(self, vertices):
+        self.V = len(vertices[0])
+        self.graph = vertices
+
+    def printSolution(self, dist):
+        print("Vertex \t Distance from Source")
+        for node in range(self.V):
+            print(node, "\t\t", dist[node])
+
+    # A utility function to find the vertex with
+    # minimum distance value, from the set of vertices
+    # not yet included in shortest path tree
+    def minDistance(self, dist, sptSet):
+
+        # Initialize minimum distance for next node
+        min = 1e7
+
+        # Search not nearest vertex not in the
+        # shortest path tree
+        min_index = 0
+        for v in range(self.V):
+            if dist[v] < min and sptSet[v] == False:
+                min = dist[v]
+                min_index = v
+
+        return min_index
+
+    # Function that implements Dijkstra's single source
+    # shortest path algorithm for a graph represented
+    # using adjacency matrix representation
+    def dijkstra(self, src):
+
+        dist = [1e7] * self.V
+        dist[src] = 0
+        sptSet = [False] * self.V
+
+        for cout in range(self.V):
+
+            # Pick the minimum distance vertex from
+            # the set of vertices not yet processed.
+            # u is always equal to src in first iteration
+            u = self.minDistance(dist, sptSet)
+
+            # Put the minimum distance vertex in the
+            # shortest path tree
+            sptSet[u] = True
+
+            # Update dist value of the adjacent vertices
+            # of the picked vertex only if the current
+            # distance is greater than new distance and
+            # the vertex in not in the shortest path tree
+            for v in range(self.V):
+                if (self.graph[u][v] > 0 and
+                        sptSet[v] == False and
+                        dist[v] > dist[u] + self.graph[u][v]):
+                    dist[v] = dist[u] + self.graph[u][v]
+
+        # self.printSolution(dist)
+        return dist
+
+# This code is contributed by Divyanshu Mehta
+
+#  END
+#
+##########################################################
