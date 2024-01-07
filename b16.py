@@ -83,7 +83,7 @@ class Beam:
         column = start_column
         row    = start_row
 
-        blog(f"Calculating beam from ({start_column}, {start_row}) in direction {direction.DIR_NAME}", frameNudge=1)
+        # blog(f"Calculating beam from ({start_column}, {start_row}) in direction {direction.DIR_NAME}", frameNudge=1)
 
         cell   = None
         split  = None
@@ -94,7 +94,7 @@ class Beam:
             column += direction.DIR_COLUMN_DELTA
             row    += direction.DIR_ROW_DELTA   
             cell = grid.get_cell(column, row)
-            blog(f"   check ({column}, {row}) -> {cell}", frameNudge=1)
+            # blog(f"   check ({column}, {row}) -> {cell}", frameNudge=1)
             if cell is None: 
                 escape = True
                 break
@@ -134,13 +134,13 @@ class Tracer:
 
         # Now set to energized all cells that are part of a beam
         for beam in beams.values():
-            blog(f"Processing beam {beam}", frameNudge=1)
+            # blog(f"Processing beam {beam}", frameNudge=1)
             column = beam.BEAM_START_COLUMN
             row    = beam.BEAM_START_ROW
             while (column, row) != (beam.BEAM_END_COLUMN, beam.BEAM_END_ROW):
-                blog(f"Checking ({column}, {row}) for energization", frameNudge=1)
+                # blog(f"Checking ({column}, {row}) for energization", frameNudge=1)
                 if 0 <= column < grid.GRID_COLUMNS and 0 <= row < grid.GRID_ROWS:
-                    blog(f"Setting ({column}, {row}) to energized", frameNudge=1)
+                    # blog(f"Setting ({column}, {row}) to energized", frameNudge=1)
                     energized[row][column] = CELL_ENERGIZED
                 column += beam.BEAM_DIRECTION.DIR_COLUMN_DELTA
                 row    += beam.BEAM_DIRECTION.DIR_ROW_DELTA
@@ -164,7 +164,7 @@ if __name__ == '__main__':
 
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
                 ("sample", sample_data,       46,      -1),
-                ("real",   full_data,         -1,      -1),
+                ("real",   full_data,       8116,      -1),
             ]:
         blog(f"Considering -> {tag}")
 
