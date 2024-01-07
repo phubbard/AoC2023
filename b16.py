@@ -30,6 +30,7 @@ CELL_PIPE_HORIZONTAL = '-'
 CELL_DIAG_RIGHT      = '\\'
 CELL_DIAG_LEFT       = '/'
 CELL_SPACE           = '.'
+CELL_ENERGIZED       = '#'
 
 class Direction:
     def __init__(self, name: str,
@@ -126,6 +127,35 @@ class Beam:
         return prefix + postfix
 
 
+class Tracer:
+    def __init__(self, grid, beams):
+        # First make an array of arrays of spaces, sized according to grid
+        energized = [[CELL_SPACE for column in range(grid.GRID_COLUMNS)] for row in range(grid.GRID_ROWS)]
+
+        # Now set to energized all cells that are part of a beam
+        for beam in beams.values():
+            blog(f"Processing beam {beam}", frameNudge=1)
+            column = beam.BEAM_START_COLUMN
+            row    = beam.BEAM_START_ROW
+            while (column, row) != (beam.BEAM_END_COLUMN, beam.BEAM_END_ROW):
+                blog(f"Checking ({column}, {row}) for energization", frameNudge=1)
+                if 0 <= column < grid.GRID_COLUMNS and 0 <= row < grid.GRID_ROWS:
+                    blog(f"Setting ({column}, {row}) to energized", frameNudge=1)
+                    energized[row][column] = CELL_ENERGIZED
+                column += beam.BEAM_DIRECTION.DIR_COLUMN_DELTA
+                row    += beam.BEAM_DIRECTION.DIR_ROW_DELTA
+
+        # store the array
+        self.TRACER_ENERGIZED = energized
+
+    def get_energized_count(self):
+        return sum([sum([1 if cell == CELL_ENERGIZED else 0 for cell in row]) for row in self.TRACER_ENERGIZED])
+        
+    def __str__(self):
+        return "\n".join(["".join(row) for row in self.TRACER_ENERGIZED])
+
+
+
 if __name__ == '__main__':
 
     day_number = 16
@@ -133,7 +163,7 @@ if __name__ == '__main__':
     sample_data, full_data = load_2d_arrays(day_number)
 
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
-                ("sample", sample_data,       -1,      -1),
+                ("sample", sample_data,       46,      -1),
                 ("real",   full_data,         -1,      -1),
             ]:
         blog(f"Considering -> {tag}")
@@ -167,9 +197,10 @@ if __name__ == '__main__':
                 beams[where] = beam 
             active_beams = new_beams
 
-        raise Exception(f"TODO after {len(beams)} beams")
+        tracer = Tracer(grid, beams)
+        found_answer_p1 = tracer.get_energized_count()
+        blog(f"RESULT={found_answer_p1}", multiline=str(tracer))
 
-        found_answer_p1 = 0
         blog(f"expected_p1_answer={expected_p1_answer} and found_answer_p1={found_answer_p1}")
         if expected_p1_answer > -1:
             assert found_answer_p1 == expected_p1_answer
