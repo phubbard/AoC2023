@@ -163,7 +163,7 @@ if __name__ == '__main__':
     sample_data, full_data = load_2d_arrays(day_number)
 
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
-                ("sample", sample_data,       46,      -1),
+                ("sample", sample_data,       46,      51),
                 ("real",   full_data,       8116,      -1),
             ]:
         blog(f"Considering -> {tag}")
@@ -172,40 +172,56 @@ if __name__ == '__main__':
         blog(f"grid.GRID_CONTENTS=", multiline=str(grid))
 
         beams = {} # (start_column, start_row, direction) -> Beam
-        first_beam = Beam(grid, -1, 0, DIR_RIGHT)
-        active_beams = [first_beam]
-        while len(active_beams) > 0:
-            new_beams = []
-            for beam in active_beams:
-                where = (beam.BEAM_START_COLUMN, beam.BEAM_START_ROW, beam.BEAM_DIRECTION)
-                if where in beams:
-                    continue # already processed this beam
+        prime_beam = Beam(grid, -1, 0, DIR_RIGHT)
+        def _calculate_given_entry(first_beam):
+            active_beams = [first_beam]
+            while len(active_beams) > 0:
+                new_beams = []
+                for beam in active_beams:
+                    where = (beam.BEAM_START_COLUMN, beam.BEAM_START_ROW, beam.BEAM_DIRECTION)
+                    if where in beams:
+                        continue # already processed this beam
 
-                # Create any new beams
-                if beam.BEAM_SPLIT:
-                    for direction in beam.BEAM_SPLIT:
-                        new_beam = Beam(grid, beam.BEAM_END_COLUMN, beam.BEAM_END_ROW, direction)
+                    # Create any new beams
+                    if beam.BEAM_SPLIT:
+                        for direction in beam.BEAM_SPLIT:
+                            new_beam = Beam(grid, beam.BEAM_END_COLUMN, beam.BEAM_END_ROW, direction)
+                            new_beams.append(new_beam)
+                    elif beam.BEAM_BENT:
+                        new_beam = Beam(grid, beam.BEAM_END_COLUMN, beam.BEAM_END_ROW, beam.BEAM_BENT)
                         new_beams.append(new_beam)
-                elif beam.BEAM_BENT:
-                    new_beam = Beam(grid, beam.BEAM_END_COLUMN, beam.BEAM_END_ROW, beam.BEAM_BENT)
-                    new_beams.append(new_beam)
-                elif beam.BEAM_ESCAPE:
-                    pass
-                else: raise Exception(f"Unexpected beam state {beam}")
+                    elif beam.BEAM_ESCAPE:
+                        pass
+                    else: raise Exception(f"Unexpected beam state {beam}")
 
-                # record this beam
-                beams[where] = beam 
-            active_beams = new_beams
+                    # record this beam
+                    beams[where] = beam 
+                active_beams = new_beams
 
-        tracer = Tracer(grid, beams)
-        found_answer_p1 = tracer.get_energized_count()
-        blog(f"RESULT={found_answer_p1}", multiline=str(tracer))
+            tracer = Tracer(grid, beams)
+            energized = tracer.get_energized_count()
+            blog(f"RESULT={energized}", multiline=str(tracer))
+            return energized
+        found_answer_p1 = _calculate_given_entry(prime_beam)
 
         blog(f"expected_p1_answer={expected_p1_answer} and found_answer_p1={found_answer_p1}")
         if expected_p1_answer > -1:
             assert found_answer_p1 == expected_p1_answer
         else:
             blog(f"Skipping part one")
+
+        blog(f"Given grid sized {grid.GRID_COLUMNS}x{grid.GRID_ROWS}...")
+        def _make_edge_beams():
+            beams = []
+            for column in range(grid.GRID_COLUMNS):
+                beams.append(Beam(grid, column, -1, DIR_DOWN))
+                beams.append(Beam(grid, column, grid.GRID_ROWS, DIR_UP))
+            for row in range(grid.GRID_ROWS):
+                beams.append(Beam(grid, -1, row, DIR_RIGHT))
+                beams.append(Beam(grid, grid.GRID_COLUMNS, row, DIR_LEFT))
+            return beams
+        for beam in _make_edge_beams():
+            blog(f"Edge beam {beam}")
 
         found_answer_p2 = 0
         blog(f"expected_p2_answer={expected_p2_answer} and found_answer_p2={found_answer_p2}")
