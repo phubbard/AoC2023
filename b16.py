@@ -164,16 +164,16 @@ if __name__ == '__main__':
 
     for tag, dataset, expected_p1_answer, expected_p2_answer in [
                 ("sample", sample_data,       46,      51),
-                ("real",   full_data,       8116,      -1),
+                ("real",   full_data,       8116,    8383),
             ]:
         blog(f"Considering -> {tag}")
 
         grid = Grid(dataset)
         blog(f"grid.GRID_CONTENTS=", multiline=str(grid))
 
-        beams = {} # (start_column, start_row, direction) -> Beam
         prime_beam = Beam(grid, -1, 0, DIR_RIGHT)
         def _calculate_given_entry(first_beam):
+            beams = {} # (start_column, start_row, direction) -> Beam
             active_beams = [first_beam]
             while len(active_beams) > 0:
                 new_beams = []
@@ -200,7 +200,7 @@ if __name__ == '__main__':
 
             tracer = Tracer(grid, beams)
             energized = tracer.get_energized_count()
-            blog(f"RESULT={energized}", multiline=str(tracer))
+            # blog(f"RESULT={energized}", multiline=str(tracer))
             return energized
         found_answer_p1 = _calculate_given_entry(prime_beam)
 
@@ -220,10 +220,12 @@ if __name__ == '__main__':
                 beams.append(Beam(grid, -1, row, DIR_RIGHT))
                 beams.append(Beam(grid, grid.GRID_COLUMNS, row, DIR_LEFT))
             return beams
+        max_energized = 0
         for beam in _make_edge_beams():
-            blog(f"Edge beam {beam}")
-
-        found_answer_p2 = 0
+            energized = _calculate_given_entry(beam)
+            # blog(f"Edge beam {beam} has {energized} energized")
+            max_energized = max(max_energized, energized)
+        found_answer_p2 = max_energized
         blog(f"expected_p2_answer={expected_p2_answer} and found_answer_p2={found_answer_p2}")
         if expected_p2_answer > -1:
             assert found_answer_p2 == expected_p2_answer
