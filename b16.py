@@ -81,6 +81,9 @@ class Beam:
                  ):
         column = start_column
         row    = start_row
+
+        blog(f"Calculating beam from ({start_column}, {start_row}) in direction {direction.DIR_NAME}", frameNudge=1)
+
         cell   = None
         split  = None
         bent   = None
@@ -90,6 +93,7 @@ class Beam:
             column += direction.DIR_COLUMN_DELTA
             row    += direction.DIR_ROW_DELTA   
             cell = grid.get_cell(column, row)
+            blog(f"   check ({column}, {row}) -> {cell}", frameNudge=1)
             if cell is None: 
                 escape = True
                 break
@@ -112,6 +116,14 @@ class Beam:
         self.BEAM_END_ROW      = row
         self.BEAM_SPLIT        = split
         self.BEAM_BENT         = bent
+        self.BEAM_ESCAPE       = escape
+
+    def __str__(self):
+        prefix = f"Beam({self.BEAM_START_COLUMN}, {self.BEAM_START_ROW}) {self.BEAM_DIRECTION.DIR_NAME} to ({self.BEAM_END_COLUMN}, {self.BEAM_END_ROW}) "
+        if self.BEAM_ESCAPE: postfix = "escaped"
+        elif self.BEAM_SPLIT: postfix = f"split to {self.BEAM_SPLIT[0].DIR_NAME} and {self.BEAM_SPLIT[1].DIR_NAME}"
+        elif self.BEAM_BENT:  postfix = f"bent to {self.BEAM_BENT.DIR_NAME}"
+        return prefix + postfix
 
 
 if __name__ == '__main__':
@@ -135,22 +147,24 @@ if __name__ == '__main__':
         while len(active_beams) > 0:
             new_beams = []
             for beam in active_beams:
+                where = (beam.BEAM_START_COLUMN, beam.BEAM_START_ROW, beam.BEAM_DIRECTION)
+                if where in beams:
+                    continue # already processed this beam
+
                 # Create any new beams
                 if beam.BEAM_SPLIT:
                     for direction in beam.BEAM_SPLIT:
-                        new_beam = Beam(grid, beam.BEAM_START_COLUMN, beam.BEAM_START_ROW, direction)
+                        new_beam = Beam(grid, beam.BEAM_END_COLUMN, beam.BEAM_END_ROW, direction)
                         new_beams.append(new_beam)
                 elif beam.BEAM_BENT:
-                    new_beam = Beam(grid, beam.BEAM_START_COLUMN, beam.BEAM_START_ROW, beam.BEAM_BENT)
+                    new_beam = Beam(grid, beam.BEAM_END_COLUMN, beam.BEAM_END_ROW, beam.BEAM_BENT)
                     new_beams.append(new_beam)
                 elif beam.BEAM_ESCAPE:
                     pass
                 else: raise Exception(f"Unexpected beam state {beam}")
 
                 # record this beam
-                where = (beam.BEAM_START_COLUMN, beam.BEAM_START_ROW, beam.BEAM_DIRECTION)
-                if not where in beams:
-                    beams[where] = beam 
+                beams[where] = beam 
             active_beams = new_beams
 
         raise Exception(f"TODO after {len(beams)} beams")
