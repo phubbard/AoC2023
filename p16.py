@@ -22,7 +22,7 @@ def process_step(map: list, row: int, col: int, direction: str):
         return
 
     cell = map[row][col]
-    energized_map[row][col] += 1
+    energized_map[row][col] = 1
     match cell:
         case '.':
             # Empty space - no-op
@@ -57,17 +57,21 @@ def process_step(map: list, row: int, col: int, direction: str):
                 new_row, new_col = next_row_col(row, col, 'L')
                 work_queue.append((new_row, new_col, 'L'))
                 new_row, new_col = next_row_col(row, col, 'R')
-                work_queue.append((new_row, new_col, 'D'))
+                work_queue.append((new_row, new_col, 'R'))
 
 
 def part_one(map, en_map):
     global work_queue
+    previous_work = {}
     work_queue.append((0, 0, 'R'))
     while len(work_queue) > 0:
         row, col, direction = work_queue.pop(0)
+        if (row, col, direction) in previous_work:
+            continue
+        previous_work[(row, col, direction)] = True
         process_step(map, row, col, direction)
 
-        log.debug(f'After step: {row}, {col}, {direction} we have {work_queue=}')
+        # log.debug(f'After step: {row}, {col}, {direction} {map[row][col]} we have {work_queue=}')
     for row in en_map:
         new_row = []
         for entry in row:
@@ -83,3 +87,6 @@ if __name__ == '__main__':
     sample, full = load_2d_arrays(16)
     energized_map = make_2d_array(len(sample), len(sample[0]))
     part_one(sample, energized_map)
+
+    energized_map = make_2d_array(len(full), len(full[0]))
+    part_one(full, energized_map)
