@@ -260,9 +260,12 @@ class Graph:
 
 #  END
 #
+
+
 ##########################################################
 # Found a better implementation that doesn't reinvent the priority queue.
 # See https://stackoverflow.com/questions/22897209/dijkstras-algorithm-in-python
+# and https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
 
 # graph = {
 #     'A': [('B', 2), ('C', 1)],
