@@ -1,5 +1,5 @@
 
-from utils import load_2d_arrays, blog
+from utils import load_2d_arrays, blog, safe_insert
 
 import os
 
@@ -17,6 +17,45 @@ class Grid:
     def __str__(self):
         return "\n".join(["".join(row) for row in self.GRID_CONTENTS])
 
+
+# Whether the next move must be vertical or horizontal
+PLANE_VERTICAL   = 'v'
+PLANE_HORIZONTAL = 'h'
+PLANE_START      = 's'
+PLANE_FINISH     = 'f'
+
+
+class Node:
+    def __init__(self, name: str, row: int, column: int, plane: int):
+        self.NODE_NAME   = name
+        self.NODE_ROW    = row
+        self.NODE_COLUMN = column
+        self.NODE_PLANE  = plane
+        self.__node_working = {} # dict
+
+    def node_neighbor(self, neighbor_name: str, cost: int):
+        safe_insert(self.__node_working, neighbor_name, cost)
+
+    def node_freeze(self, builder):
+        self.NODE_NEIGHBORS = tuple(builder.make_node(name) for name in self.__node_working)
+        del self.__node_working
+
+
+class Builder:
+    def __init__(self):
+        self.__working_nodes = {}
+
+    def builder_node(self, row, column, plane):
+        node_name = f"{plane}:{row},{column}"
+        if node_name not in self.__working_nodes:
+            self.__working_nodes[node_name] = Node(node_name, row, column, plane)
+        return self.__working_nodes[node_name]
+    
+    def builder_freeze(self):
+        for node in self.__working_nodes.values():
+            node.node_freeze(self)
+        self.BUILDER_NODES = tuple(self.__working_nodes.values())
+        del self.__working_nodes
 
 
 if __name__ == '__main__':
