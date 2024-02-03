@@ -1,6 +1,7 @@
 # Dijkstra variations, ahoy!
-from utils import dijkstra, log, load_2d_arrays, manhattan_distance
-
+from utils import log, load_2d_arrays, manhattan_distance
+from collections import defaultdict
+import heapq
 
 graph = {
     'A': [('B', 2), ('C', 1)],
@@ -11,6 +12,28 @@ graph = {
     'F': [('D', 2), ('E', 4)]
 
 }
+
+
+def dijkstra(graph, start):
+    result_map = defaultdict(lambda: float('inf'))
+    result_map[start] = 0
+
+    visited = set()
+
+    queue = [(0, start)]
+
+    while queue:
+        weight, v = heapq.heappop(queue)
+        visited.add(v)
+
+        for u, w in graph[v]:
+            if u not in visited:
+                result_map[u] = min(w + weight, result_map[u])
+                heapq.heappush(queue, [w + weight, u])
+
+    return result_map
+
+
 
 def to_adjacency(input_map: list) -> dict:
     # Given a 2D map, return an adjacency list.
@@ -29,16 +52,16 @@ def to_adjacency(input_map: list) -> dict:
 
             # left
             if col_idx > 0:
-                adjacency[node_name].append(((row_idx, col_idx - 1), input_map[row_idx][col_idx - 1]))
+                adjacency[node_name].append(((row_idx, col_idx - 1), int(input_map[row_idx][col_idx - 1])))
             # right
             if col_idx < len(row) - 1:
-                adjacency[node_name].append(((row_idx, col_idx + 1), input_map[row_idx][col_idx + 1]))
+                adjacency[node_name].append(((row_idx, col_idx + 1), int(input_map[row_idx][col_idx + 1])))
             # up
             if row_idx > 0:
-                adjacency[node_name].append(((row_idx - 1, col_idx), input_map[row_idx - 1][col_idx]))
+                adjacency[node_name].append(((row_idx - 1, col_idx), int(input_map[row_idx - 1][col_idx])))
             # down
             if row_idx < len(input_map) - 1:
-                adjacency[node_name].append(((row_idx + 1, col_idx), input_map[row_idx + 1][col_idx]))
+                adjacency[node_name].append(((row_idx + 1, col_idx), int(input_map[row_idx + 1][col_idx])))
 
     return adjacency
 
@@ -49,4 +72,4 @@ if __name__ == '__main__':
     a = to_adjacency(sample)
     pass
 
-    # print(dijkstra(graph, 'A'))
+    print(dijkstra(a, (0, 0)))
