@@ -95,6 +95,7 @@ def zero_pad(number, digits=2):
 
 
 def get_data_lines(problem_number):
+    # This is the most-used function for reading data.
     # Return a tuple of (sample data, full data)
     # Based on the problem number. Normal
     # pattern is to have line-specific parsers that operate on the return from this.
@@ -107,28 +108,22 @@ def get_data_lines(problem_number):
     return (sample_data, full_data)
 
 
-def draw_coordinate_line_closed(tuple_from, tuple_to):
-    """Return a list of integer points between two tuples, including the endpoints.
+# Pick's theorem and the shoelace formula
+# https://en.wikipedia.org/wiki/Pick%27s_theorem
+# https://en.wikipedia.org/wiki/Shoelace_formula
+# Implementation from https://stackoverflow.com/questions/41077185/fastest-way-to-shoelace-formula
+def shoelace_formula(polygonBoundary, absoluteValue = True):
+    # Input looks like
+    # polygonBoundary = ((5, 0), (6, 4), (4, 5), (1, 5), (1, 0))
+    nbCoordinates = len(polygonBoundary)
+    nbSegment = nbCoordinates - 1
 
-    At the time of this writing, this does not support diagonals: only one dimension
-    of endpoint coordinates is allowed to differ between from and to.
+    l = [(polygonBoundary[i+1][0] - polygonBoundary[i][0]) * (polygonBoundary[i+1][1] + polygonBoundary[i][1]) for i in xrange(nbSegment)]
 
-    """
-    assert len(tuple_from) == len(tuple_to)
-
-    list_delta = []
-    for x in range(len(tuple_from)):
-        value_from = tuple_from[x]
-        value_to   = tuple_to[x]
-        assert isinstance(value_from, int)
-        assert isinstance(value_to,   int)
-
-        list_delta.append(value_to - value_from)
-
-    count_nonzero_dimensions = len([x for x in list_delta if x != 0])
-    assert count_nonzero_dimensions < 2
-
-    raise Exception("This was never finished.  Next time!")
+    if absoluteValue:
+        return abs(sum(l) / 2.)
+    else:
+        return sum(l) / 2.
 
 
 def safe_insert(key, value, dictish):
